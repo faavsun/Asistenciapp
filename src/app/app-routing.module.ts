@@ -20,10 +20,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/alertas/alertas.module').then( m => m.AlertasPageModule)
   },
   {
-    path: 'formulario',
-    loadChildren: () => import('./pages/formulario/formulario.module').then( m => m.FormularioPageModule)
-  },
-  {
     path: 'repasoconceptos',
     loadChildren: () => import('./pages/repasoconceptos/repasoconceptos.module').then( m => m.RepasoconceptosPageModule)
   },
@@ -31,6 +27,11 @@ const routes: Routes = [
     path: 'ramos',
     loadChildren: () => import('./pages/ramos/ramos.module').then( m => m.RamosPageModule)
   },
+  {
+    path: 'login',
+    loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
+  },
+
 
 
 ];

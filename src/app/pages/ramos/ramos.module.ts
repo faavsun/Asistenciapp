@@ -7,14 +7,17 @@ import { IonicModule } from '@ionic/angular';
 import { RamosPageRoutingModule } from './ramos-routing.module';
 
 import { RamosPage } from './ramos.page';
+import { ComponentsModule } from "../../components/components.module";
+
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    RamosPageRoutingModule
-  ],
+    RamosPageRoutingModule,
+    ComponentsModule
+],
   declarations: [RamosPage]
 })
 export class RamosPageModule {}

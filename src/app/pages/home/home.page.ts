@@ -21,13 +21,8 @@ export class HomePage implements OnInit {
       etiqueta:'Alertas'
     },
     {
-      ruta:'/formulario',
-      icono:'reader-outline',
-      etiqueta:'Formulario'
-    },
-    {
       ruta:'/ramos',
-      icono:'arrow-up',
+      icono:'reader-outline',
       etiqueta:'Ramos'
     }
   ]
