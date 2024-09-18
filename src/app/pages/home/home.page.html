@@ -1,0 +1,32 @@
+<ion-header >
+  <ion-toolbar>
+    <ion-icon slot="start" name="menu" class="ion-padding" size="large" color="tertiary"></ion-icon>
+    <ion-title class="ion-text-capitalize">Home</ion-title>
+    <ion-icon slot="end" name="person" class="ion-padding" size="large" color="tertiary"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-text color="primary" class="ion-text-center">
+    <h1>Ejemplo Componentes</h1>
+  </ion-text>
+ <ion-list [inset]="true" lines="inset" mode="ios">
+  <ion-list-header mode="ios" color="primary">
+    <ion-label>Menú</ion-label>
+  </ion-list-header>
+
+  <ion-item routerLink="{{item.ruta}}" detail="true" *ngFor="let item of elementos" >
+    <ion-icon name="{{item.icono}}" slot="start"></ion-icon>
+    <ion-label>{{item.etiqueta}}</ion-label>
+  </ion-item>
+
+
+ </ion-list>
+ 
+ <ion-action-sheet trigger="repaso" backdropDismiss="false" header="Actions" [buttons]="actionSheetButtons" mode="ios"></ion-action-sheet>
+
+
+</ion-content>
+<ion-button id="repaso"  expand="block" fill="clear" >
+  Repaso
+</ion-button>
