@@ -1,40 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuItem } from '../../interfaces/menu-item';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.page.html',
-  styleUrls: ['./home.page.scss'],
+  selector: 'app-ramos',
+  templateUrl: './ramos.page.html',
+  styleUrls: ['./ramos.page.scss'],
 })
-export class HomePage implements OnInit {
-
-  elementos:MenuItem[]=[
-    {
-      ruta:'/botones',
-      icono:'radio-button-on-outline',
-      etiqueta:'Botones'
-    },
-    {
-      ruta:'/alertas',
-      icono:'warning-outline',
-      etiqueta:'Alertas'
-    },
-    {
-      ruta:'/formulario',
-      icono:'reader-outline',
-      etiqueta:'Formulario'
-    },
-    {
-      ruta:'/ramos',
-      icono:'arrow-up',
-      etiqueta:'Ramos'
-    }
-  ]
-
-
-
-
+export class RamosPage implements OnInit {
 
   public actionSheetButtons = [
     {
@@ -68,11 +40,15 @@ export class HomePage implements OnInit {
     },
   ];
 
+
+
+
+  asignaturas: string[] = ['Matemáticas', 'Historia', 'Biología', 'Química', 'Inglés', 'Física'];
+
   constructor(private router:Router) { }
 
   ngOnInit() {
   }
-
   metodoEjemplo()
   {
     console.log("hola");

@@ -7,26 +7,25 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-text color="primary" class="ion-text-center">
-    <h1>Ejemplo Componentes</h1>
+  <ion-text color="primary">
+    <h1>Lista de Asignaturas</h1>
   </ion-text>
  <ion-list [inset]="true" lines="inset" mode="ios">
-  <ion-list-header mode="ios" color="primary">
-    <ion-label>Menú</ion-label>
+  <ion-list-header mode="ios" color="primary" class="ion-text-center">
+    <ion-label>Listado</ion-label>
   </ion-list-header>
 
-  <ion-item routerLink="{{item.ruta}}" detail="true" *ngFor="let item of elementos" >
-    <ion-icon name="{{item.icono}}" slot="start"></ion-icon>
-    <ion-label>{{item.etiqueta}}</ion-label>
+  <ion-item button="true" *ngFor="let asignatura of asignaturas">
+    {{ asignatura }}
   </ion-item>
 
+</ion-list>
 
- </ion-list>
- 
- <ion-action-sheet trigger="Cuenta" backdropDismiss="false" header="Opciones de cuenta" [buttons]="actionSheetButtons" mode="ios"></ion-action-sheet>
+<ion-action-sheet trigger="Cuenta" backdropDismiss="false" header="Opciones de cuenta" [buttons]="actionSheetButtons" mode="ios"></ion-action-sheet>
 
 
 </ion-content>
 <ion-button id="Cuenta"  expand="block" fill="clear" >
   Cuenta
 </ion-button>
+
