@@ -19,7 +19,9 @@ export class RamosPage implements OnInit {
 
   ngOnInit() {
   }
-
+  Marcar() {
+    this.router.navigate(['/marcar'])
+  }
   metodoEjemplo()
   {
     console.log("hola");

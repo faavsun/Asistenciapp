@@ -30,7 +30,11 @@ const routes: Routes = [
   {
     path: 'login',
     loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
+  },  {
+    path: 'marcar',
+    loadChildren: () => import('./pages/marcar/marcar.module').then( m => m.MarcarPageModule)
   },
+
 
 
 

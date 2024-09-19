@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from '../../interfaces/menu-item';
+import { MenuController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
 @Component({
@@ -71,7 +72,12 @@ export class HomePage implements OnInit {
 
 
 
-  constructor(private router:Router) { }
+  constructor(private router:Router,private menuCtrl: MenuController ) { }
+
+  ionViewWillLeave() {
+    this.menuCtrl.close(); // Cerrar el menú cuando sale de la vista
+  }
+
 
   ngOnInit() {
   }
