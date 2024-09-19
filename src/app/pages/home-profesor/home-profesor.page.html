@@ -1,0 +1,47 @@
+<ion-menu side="end" contentId="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Cuenta</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">Opciones
+    <ion-item routerLink="{{item.ruta}}" detail="true" *ngFor="let item of elementos">
+      <ion-icon name="{{item.icono}}" slot="start"></ion-icon>
+      <ion-label>{{item.etiqueta}}</ion-label>
+    </ion-item>
+  </ion-content>
+
+</ion-menu>
+<div class="ion-page" id="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title class="ion-text-capitalize">Inicio</ion-title>
+      <ion-buttons slot="end">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+
+
+
+
+
+  <ion-content class="ion-padding">
+    <ion-list [inset]="true" lines="inset" mode="ios">
+      <ion-list-header mode="ios" color="primary" class="ion-text-center">
+        <ion-label>Listado de Asignaturas</ion-label>
+      </ion-list-header>
+      <ion-item routerLink="{{asignatura.ruta}}" detail="true" *ngFor="let asignatura of asignaturas">
+        <ion-icon name="{{asignatura.icono}}" slot="start"></ion-icon>
+        <ion-label>{{asignatura.etiqueta}}</ion-label>
+      </ion-item>
+
+
+
+    </ion-list>
+
+
+
+  </ion-content>
+</div>

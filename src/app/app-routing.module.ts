@@ -34,6 +34,18 @@ const routes: Routes = [
     path: 'marcar',
     loadChildren: () => import('./pages/marcar/marcar.module').then( m => m.MarcarPageModule)
   },
+  {
+    path: 'home-profesor',
+    loadChildren: () => import('./pages/home-profesor/home-profesor.module').then( m => m.HomeProfesorPageModule)
+  },
+  {
+    path: 'ramos-profesor',
+    loadChildren: () => import('./pages/ramos-profesor/ramos-profesor.module').then( m => m.RamosProfesorPageModule)
+  },
+  {
+    path: 'generar-profesor',
+    loadChildren: () => import('./pages/generar-profesor/generar-profesor.module').then( m => m.GenerarProfesorPageModule)
+  },
 
 
 

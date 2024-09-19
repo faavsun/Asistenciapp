@@ -26,7 +26,7 @@ export class LoginPage implements OnInit {
     }
     else if(this.usr.username=="paco" && this.usr.password=="123"){
       console.log('autorizado!!!');
-      this.router.navigate(["/ramos"])
+      this.router.navigate(["/home-profesor"])
     }
     else{
       console.log("Pa la casa!!!");
