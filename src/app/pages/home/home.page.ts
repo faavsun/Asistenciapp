@@ -13,7 +13,7 @@ export class HomePage implements OnInit {
     {
       ruta:'/botones',
       icono:'radio-button-on-outline',
-      etiqueta:'Botones'
+      etiqueta:'Perfil'
     },
     {
       ruta:'/alertas',
@@ -21,7 +21,7 @@ export class HomePage implements OnInit {
       etiqueta:'Alertas'
     },
     {
-      ruta:'/ramos',
+      ruta:'/home',
       icono:'reader-outline',
       etiqueta:'Ramos'
     },
@@ -32,39 +32,42 @@ export class HomePage implements OnInit {
     }
   ]
 
-
-
-  public actionSheetButtons = [
+  asignaturas:MenuItem[]=[
     {
-      text: 'Perfil',
-      handler:()=>{
-        this.router.navigate(['/repasoconceptos']); //para el perfil
-        this.metodoEjemplo();
-      },
-      
-      data: {
-        action: 'share',
-      },
+      ruta:'/ramos',
+      icono:'reader-outline',
+      etiqueta:'Matemáticas'
     },
     {
-      text: 'Cerrar sesion',
-      role: 'destructive',
-      handler:()=>{
-        this.router.navigate(['/botones']); //aca es para cerrar la sesion
-        this.metodoEjemplo();
-      },
-      data: {
-        action: 'delete',
-      },
-    },
+      ruta:'/ramos',
+      icono:'reader-outline',
+      etiqueta:'Historia'
+    },    
     {
-      text: 'Cancelar',
-      role: 'cancel',
-      data: {
-        action: 'cancel',
-      },
-    },
+      ruta:'/ramos',
+      icono:'reader-outline',
+      etiqueta:'Biología'
+    },    
+    {
+      ruta:'/ramos',
+      icono:'reader-outline',
+      etiqueta:'Química'
+    },    
+    {
+      ruta:'/ramos',
+      icono:'reader-outline',
+      etiqueta:'Inglés'
+    },  
+    {
+      ruta:'/ramos',
+      icono:'reader-outline',
+      etiqueta:'Física'
+    }
+  
   ];
+
+
+
 
 
 

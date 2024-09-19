@@ -1,22 +1,19 @@
-<app-encabezado titulo="Lista de Asignaturas"></app-encabezado>
+<app-encabezado titulo="Asistencia"></app-encabezado>
 
 <ion-content class="ion-padding">
- <ion-list [inset]="true" lines="inset" mode="ios">
-  <ion-list-header mode="ios" color="primary" class="ion-text-center">
-    <ion-label>Listado</ion-label>
-  </ion-list-header>
-
-  <ion-item button="true" *ngFor="let asignatura of asignaturas">
-    {{ asignatura }}
+  <ion-item>
+    <ion-label>
+      <h1>Matematica</h1>
+      <p>Profesor: xxxxxxx-xxxxxx</p>
+      <p>Aula: xxx-x</p>
+    </ion-label>
   </ion-item>
+  
+  <ion-img class="ion-padding" src="../../../assets/img/plantilla.png" alt="Qr-ejemplo"></ion-img>
+  
 
-</ion-list>
-
-<ion-action-sheet trigger="Cuenta" backdropDismiss="false" header="Opciones de cuenta" [buttons]="actionSheetButtons" mode="ios"></ion-action-sheet>
-
+  <ion-button class="ion-padding" shape="round" expand="block">Marcar</ion-button>
 
 </ion-content>
-<ion-button id="Cuenta"  expand="block" fill="clear" >
-  Cuenta
-</ion-button>
+
 
