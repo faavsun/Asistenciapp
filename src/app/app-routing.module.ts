@@ -30,7 +30,11 @@ const routes: Routes = [
   {
     path: 'repasoconceptos',
     loadChildren: () => import('./pages/repasoconceptos/repasoconceptos.module').then( m => m.RepasoconceptosPageModule)
+  },  {
+    path: 'registro',
+    loadChildren: () => import('./pages/registro/registro.module').then( m => m.RegistroPageModule)
   },
+
 
 ];
 

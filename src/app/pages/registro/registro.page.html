@@ -1,0 +1,32 @@
+<ion-content class="ion-padding">
+  <ion-text color="primary" class="ion-text-center">
+    <h1>Registro</h1>
+  </ion-text>
+
+  <form #miForm="ngForm" (ngSubmit)="Registrarse()">
+    <ion-item>
+      <ion-label position="floating">Nombre</ion-label>
+      <ion-input type="text" required placeholder=""></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Apellido</ion-label>
+      <ion-input type="text" required placeholder=""></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">RUT</ion-label>
+      <ion-input type="text" required placeholder=""></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Correo</ion-label>
+      <ion-input type="email" required placeholder=""></ion-input>
+    </ion-item>
+
+
+    <ion-button expand="block" type="submit" fill="solid" color="tertiary" [disabled]="miForm.invalid">
+      Registrarse
+    </ion-button>
+  </form>
+</ion-content>

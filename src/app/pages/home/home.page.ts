@@ -9,26 +9,31 @@ import { Router } from '@angular/router';
 })
 export class HomePage implements OnInit {
 
-  elementos:MenuItem[]=[
+  elementos: MenuItem[] = [
     {
-      ruta:'/botones',
-      icono:'radio-button-on-outline',
-      etiqueta:'Botones'
+      ruta: '/registro',
+      icono: 'reader-outline',
+      etiqueta: 'Registro'
     },
     {
-      ruta:'/alertas',
-      icono:'warning-outline',
-      etiqueta:'Alertas'
+      ruta: '/botones',
+      icono: 'radio-button-on-outline',
+      etiqueta: 'Botones'
     },
     {
-      ruta:'/formulario',
-      icono:'reader-outline',
-      etiqueta:'Formulario'
+      ruta: '/alertas',
+      icono: 'warning-outline',
+      etiqueta: 'Alertas'
     },
     {
-      ruta:'/action-sheet',
-      icono:'arrow-up',
-      etiqueta:'Action Sheets'
+      ruta: '/formulario',
+      icono: 'reader-outline',
+      etiqueta: 'Formulario'
+    },
+    {
+      ruta: '/action-sheet',
+      icono: 'arrow-up',
+      etiqueta: 'Action Sheets'
     }
   ]
   public actionSheetButtons = [
@@ -41,11 +46,11 @@ export class HomePage implements OnInit {
     },
     {
       text: 'Formularios',
-      handler:()=>{
+      handler: () => {
         this.router.navigate(['/repasoconceptos']);
         this.metodoEjemplo();
       },
-      
+
       data: {
         action: 'share',
       },
@@ -58,13 +63,12 @@ export class HomePage implements OnInit {
       },
     },
   ];
-  constructor(private router:Router) { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
   }
 
-  metodoEjemplo()
-  {
+  metodoEjemplo() {
     console.log("hola");
   }
 }
