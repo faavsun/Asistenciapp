@@ -6,7 +6,7 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./encabezado.component.scss'],
 })
 export class EncabezadoComponent  implements OnInit {
-
+  
   @Input() titulo="";
   constructor() { }
 

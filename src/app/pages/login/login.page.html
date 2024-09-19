@@ -1,4 +1,3 @@
-<app-encabezado titulo=""></app-encabezado>
 
 <ion-content class="ion-padding">
 <ion-text color="primary" class="ion-text-center">
@@ -13,8 +12,12 @@
       <ion-input label="Password" type="password" required labelPlacement="floating" name="usr.password" [(ngModel)]="usr.password" placeholder="passsword"></ion-input>
     </ion-item>
 
-      <ion-button expand="block" (click)="iniciarSesion()" fill="solid" color="tertiary" [disabled]="miForm.invalid" >
+      <ion-button expand="block" class="ion-padding" (click)="iniciarSesion()" fill="solid" color="tertiary" [disabled]="miForm.invalid" >
         Iniciar Sesión
+      </ion-button>
+      <ion-button class="ion-padding" (click)="recuperar()" expand="full" fill="outline">
+        <ion-icon slot="start" name="mail"></ion-icon>
+        Recuperar contraseña
       </ion-button>
       <!-- <ion-text color="primary">
         <h1>Formulario invalido:{{miForm.valid}}</h1>

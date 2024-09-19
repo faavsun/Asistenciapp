@@ -24,10 +24,13 @@ export class HomePage implements OnInit {
       ruta:'/ramos',
       icono:'reader-outline',
       etiqueta:'Ramos'
+    },
+    {
+      ruta:'/login',
+      icono:'warning-outline',
+      etiqueta:'Cerrar sesion'
     }
   ]
-
-
 
 
 
@@ -62,6 +65,8 @@ export class HomePage implements OnInit {
       },
     },
   ];
+
+
 
   constructor(private router:Router) { }
 

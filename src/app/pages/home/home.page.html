@@ -1,32 +1,59 @@
-<ion-header >
-  <ion-toolbar>
-    <ion-icon slot="start" name="menu" class="ion-padding" size="large" color="tertiary"></ion-icon>
-    <ion-title class="ion-text-capitalize">Home</ion-title>
-    <ion-icon slot="end" name="person" class="ion-padding" size="large" color="tertiary"></ion-icon>
-  </ion-toolbar>
-</ion-header>
+<ion-menu side="end" contentId="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Cuenta</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">Opciones
+    <ion-item routerLink="{{item.ruta}}" detail="true" *ngFor="let item of elementos">
+      <ion-icon name="{{item.icono}}" slot="start"></ion-icon>
+      <ion-label>{{item.etiqueta}}</ion-label>
+    </ion-item>
+  </ion-content>
 
-<ion-content class="ion-padding">
-  <ion-text color="primary" class="ion-text-center">
-    <h1>Ejemplo Componentes</h1>
-  </ion-text>
- <ion-list [inset]="true" lines="inset" mode="ios">
-  <ion-list-header mode="ios" color="primary">
-    <ion-label>Menú</ion-label>
-  </ion-list-header>
-
-  <ion-item routerLink="{{item.ruta}}" detail="true" *ngFor="let item of elementos" >
-    <ion-icon name="{{item.icono}}" slot="start"></ion-icon>
-    <ion-label>{{item.etiqueta}}</ion-label>
-  </ion-item>
-
-
- </ion-list>
- 
- <ion-action-sheet trigger="Cuenta" backdropDismiss="false" header="Opciones de cuenta" [buttons]="actionSheetButtons" mode="ios"></ion-action-sheet>
+</ion-menu>
+<div class="ion-page" id="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title class="ion-text-capitalize">Inicio</ion-title>
+      <ion-buttons slot="end">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
 
 
-</ion-content>
-<ion-button id="Cuenta"  expand="block" fill="clear" >
-  Cuenta
-</ion-button>
+
+
+
+
+
+
+
+
+
+
+
+  <ion-content class="ion-padding">
+    <ion-text color="primary" class="ion-text-center">
+      <h1>Ejemplo Componentes</h1>
+    </ion-text>
+    <ion-list [inset]="true" lines="inset" mode="ios">
+      <ion-list-header mode="ios" color="primary">
+        <ion-label>Menú</ion-label>
+      </ion-list-header>
+
+      <ion-item routerLink="{{item.ruta}}" detail="true" *ngFor="let item of elementos">
+        <ion-icon name="{{item.icono}}" slot="start"></ion-icon>
+        <ion-label>{{item.etiqueta}}</ion-label>
+      </ion-item>
+
+
+    </ion-list>
+
+    <ion-action-sheet trigger="Cuenta" backdropDismiss="false" header="Opciones de cuenta"
+      [buttons]="actionSheetButtons" mode="ios"></ion-action-sheet>
+
+
+  </ion-content>
+</div>
