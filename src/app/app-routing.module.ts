@@ -46,6 +46,22 @@ const routes: Routes = [
     path: 'generar-profesor',
     loadChildren: () => import('./pages/generar-profesor/generar-profesor.module').then( m => m.GenerarProfesorPageModule)
   },
+  {
+    path: 'home-admin',
+    loadChildren: () => import('./pages/home-admin/home-admin.module').then( m => m.HomeAdminPageModule)
+  },
+  {
+    path: 'ramos-admin',
+    loadChildren: () => import('./pages/ramos-admin/ramos-admin.module').then( m => m.RamosAdminPageModule)
+  },
+  {
+    path: 'asignatura-admin',
+    loadChildren: () => import('./pages/asignatura-admin/asignatura-admin.module').then( m => m.AsignaturaAdminPageModule)
+  },
+  {
+    path: 'asignatura-editar-admin',
+    loadChildren: () => import('./pages/asignatura-editar-admin/asignatura-editar-admin.module').then( m => m.AsignaturaEditarAdminPageModule)
+  },
 
 
 

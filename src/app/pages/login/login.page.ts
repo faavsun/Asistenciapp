@@ -28,6 +28,10 @@ export class LoginPage implements OnInit {
       console.log('autorizado!!!');
       this.router.navigate(["/home-profesor"])
     }
+    else if(this.usr.username=="taco" && this.usr.password=="123"){
+      console.log('autorizado!!!');
+      this.router.navigate(["/home-admin"])
+    }
     else{
       console.log("Pa la casa!!!");
     }

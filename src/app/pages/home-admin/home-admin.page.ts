@@ -14,14 +14,11 @@ interface Asignatura {
 
 
 @Component({
-  selector: 'app-home-profesor',
-  templateUrl: './home-profesor.page.html',
-  styleUrls: ['./home-profesor.page.scss'],
+  selector: 'app-home-admin',
+  templateUrl: './home-admin.page.html',
+  styleUrls: ['./home-admin.page.scss'],
 })
-export class HomeProfesorPage implements OnInit {
-
-
-
+export class HomeAdminPage implements OnInit {
 
   //es del menu lateral
   elementos:MenuItem[]=[
@@ -36,7 +33,7 @@ export class HomeProfesorPage implements OnInit {
       etiqueta:'Alertas'
     },
     {
-      ruta:'/home-profesor',
+      ruta:'/home-admin',
       icono:'reader-outline',
       etiqueta:'Ramos'
     },
@@ -52,37 +49,37 @@ export class HomeProfesorPage implements OnInit {
   //es de la lista principal
   asignaturas: Asignatura[] = [
     {
-      ruta: '/ramos-profesor',
+      ruta: '/ramos-admin',
       icono: 'reader-outline',
       etiqueta: 'Matemáticas',
       secciones: ['Álgebra', 'Geometría', 'Cálculo']
     },
     {
-      ruta: '/ramos-profesor',
+      ruta: '/ramos-admin',
       icono: 'reader-outline',
       etiqueta: 'Historia',
       secciones: ['Historia Antigua', 'Historia Medieval', 'Historia Moderna']
     },
     {
-      ruta: '/ramos-profesor',
+      ruta: '/ramos-admin',
       icono: 'reader-outline',
       etiqueta: 'Biología',
       secciones: ['Botánica', 'Zoología', 'Genética']
     },
     {
-      ruta: '/ramos-profesor',
+      ruta: '/ramos-admin',
       icono: 'reader-outline',
       etiqueta: 'Química',
       secciones: ['Química Orgánica', 'Química Inorgánica', 'Bioquímica']
     },
     {
-      ruta: '/ramos-profesor',
+      ruta: '/ramos-admin',
       icono: 'reader-outline',
       etiqueta: 'Inglés',
       secciones: ['Gramática', 'Conversación', 'Escritura']
     },
     {
-      ruta: '/ramos-profesor',
+      ruta: '/ramos-admin',
       icono: 'reader-outline',
       etiqueta: 'Física',
       secciones: ['Mecánica', 'Termodinámica', 'Electromagnetismo']
@@ -92,18 +89,24 @@ export class HomeProfesorPage implements OnInit {
 
 
 
+
+
+
   constructor(private router:Router,private menuCtrl: MenuController ) { }
 
- 
   abrirSeccion(seccion: string) {
     console.log(`Abriendo la sección: ${seccion}`);
     // Aquí puedes manejar la lógica de navegación o abrir una vista específica para la sección seleccionada.
   }
 
+
+
   ionViewWillLeave() {
     this.menuCtrl.close(); // Cerrar el menú cuando sale de la vista
   }
-
+  Agregar(){
+    this.router.navigate(['/asignatura-admin'])
+  }
 
   ngOnInit() {
   }
