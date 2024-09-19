@@ -34,6 +34,18 @@ const routes: Routes = [
     path: 'registro',
     loadChildren: () => import('./pages/registro/registro.module').then( m => m.RegistroPageModule)
   },
+  {
+    path: 'lanzamiento',
+    loadChildren: () => import('./pages/lanzamiento/lanzamiento.module').then( m => m.LanzamientoPageModule)
+  },
+  {
+    path: 'olvidada',
+    loadChildren: () => import('./pages/olvidada/olvidada.module').then( m => m.OlvidadaPageModule)
+  },
+  {
+    path: 'perfil',
+    loadChildren: () => import('./pages/perfil/perfil.module').then( m => m.PerfilPageModule)
+  },
 
 
 ];
