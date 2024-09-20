@@ -17,6 +17,7 @@ export class LanzamientoPage implements OnInit {
       this.router.navigate(['/formulario']);
     }
   }
+
   async Lanzamiento2() {
 
     {

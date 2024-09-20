@@ -7,14 +7,16 @@ import { IonicModule } from '@ionic/angular';
 import { OlvidadaPageRoutingModule } from './olvidada-routing.module';
 
 import { OlvidadaPage } from './olvidada.page';
+import { ComponentsModule } from "../../components/components.module";
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    OlvidadaPageRoutingModule
+    OlvidadaPageRoutingModule,
+    ComponentsModule
   ],
   declarations: [OlvidadaPage]
 })
-export class OlvidadaPageModule {}
+export class OlvidadaPageModule { }
