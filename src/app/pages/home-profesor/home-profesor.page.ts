@@ -60,8 +60,80 @@ export class HomeProfesorPage implements OnInit {
     {
       ruta: '/ramos-profesor',
       icono: 'reader-outline',
-      etiqueta: 'Historia',
-      secciones: ['Historia Antigua', 'Historia Medieval', 'Historia Moderna']
+      etiqueta: 'Literatura',
+      secciones: ['Poesía', 'Narrativa', 'Ensayo']
+    },
+    {
+      ruta: '/ramos-profesor',
+      icono: 'reader-outline',
+      etiqueta: 'Arte',
+      secciones: ['Historia del Arte', 'Técnicas de Pintura', 'Escultura']
+    },
+    {
+      ruta: '/ramos-profesor',
+      icono: 'reader-outline',
+      etiqueta: 'Geografía',
+      secciones: ['Geografía Física', 'Geografía Humana', 'Cartografía']
+    },
+    {
+      ruta: '/ramos-profesor',
+      icono: 'reader-outline',
+      etiqueta: 'Economía',
+      secciones: ['Microeconomía', 'Macroeconomía', 'Economía Internacional']
+    },
+    {
+      ruta: '/ramos-profesor',
+      icono: 'reader-outline',
+      etiqueta: 'Informática',
+      secciones: ['Programación', 'Redes', 'Bases de Datos']
+    },
+    {
+      ruta: '/ramos-profesor',
+      icono: 'reader-outline',
+      etiqueta: 'Música',
+      secciones: ['Teoría Musical', 'Historia de la Música', 'Práctica Instrumental']
+    },
+    {
+      ruta: '/ramos-profesor',
+      icono: 'reader-outline',
+      etiqueta: 'Filosofía',
+      secciones: ['Ética', 'Lógica', 'Metafísica']
+    },
+    {
+      ruta: '/ramos-profesor',
+      icono: 'reader-outline',
+      etiqueta: 'Sociología',
+      secciones: ['Teoría Sociológica', 'Métodos de Investigación', 'Estudios de Caso']
+    },
+    {
+      ruta: '/ramos-profesor',
+      icono: 'reader-outline',
+      etiqueta: 'Política',
+      secciones: ['Teoría Política', 'Historia Política', 'Políticas Públicas']
+    },
+    {
+      ruta: '/ramos-profesor',
+      icono: 'reader-outline',
+      etiqueta: 'Antropología',
+      secciones: ['Antropología Cultural', 'Antropología Física', 'Antropología Social']
+    },
+    {
+      ruta: '/ramos-profesor',
+      icono: 'reader-outline',
+      etiqueta: 'Psicología',
+      secciones: ['Psicología Cognitiva', 'Psicología Social', 'Psicopatología']
+    },
+    {
+      ruta: '/ramos-profesor',
+      icono: 'reader-outline',
+      etiqueta: 'Derecho',
+      secciones: ['Derecho Penal', 'Derecho Civil', 'Derecho Internacional']
+    },
+    {
+      ruta: '/ramos-profesor',
+      icono: 'reader-outline',
+      etiqueta: 'Ingeniería',
+      secciones: ['Ingeniería Civil', 'Ingeniería Electrónica', 'Ingeniería Mecánica']
     },
     {
       ruta: '/ramos-profesor',
@@ -88,7 +160,6 @@ export class HomeProfesorPage implements OnInit {
       secciones: ['Mecánica', 'Termodinámica', 'Electromagnetismo']
     }
   ];
-
 
 
 
