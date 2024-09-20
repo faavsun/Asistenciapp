@@ -3,11 +3,11 @@ import { Router } from '@angular/router';
 import { Usuario } from 'src/app/interfaces/usuario';
 
 @Component({
-  selector: 'app-formulario',
-  templateUrl: './formulario.page.html',
-  styleUrls: ['./formulario.page.scss'],
+  selector: 'app-login',
+  templateUrl: './login.page.html',
+  styleUrls: ['./login.page.scss'],
 })
-export class FormularioPage implements OnInit {
+export class LoginPage implements OnInit {
 
   usr:Usuario={
     username:'',
@@ -24,10 +24,21 @@ export class FormularioPage implements OnInit {
       console.log('autorizado!!!');
       this.router.navigate(["/home"])
     }
+    else if(this.usr.username=="paco" && this.usr.password=="123"){
+      console.log('autorizado!!!');
+      this.router.navigate(["/home-profesor"])
+    }
+    else if(this.usr.username=="taco" && this.usr.password=="123"){
+      console.log('autorizado!!!');
+      this.router.navigate(["/home-admin"])
+    }
     else{
       console.log("Pa la casa!!!");
     }
 
+  }
+  recuperar(){
+    this.router.navigate(['/home'])
   }
 
 }

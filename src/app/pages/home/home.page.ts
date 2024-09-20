@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from '../../interfaces/menu-item';
+import { MenuController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
 @Component({
@@ -33,7 +34,7 @@ export class HomePage implements OnInit {
     {
       ruta: '/botones',
       icono: 'radio-button-on-outline',
-      etiqueta: 'Botones'
+      etiqueta: 'Perfil'
     },
     {
       ruta: '/alertas',
@@ -41,44 +42,62 @@ export class HomePage implements OnInit {
       etiqueta: 'Alertas'
     },
     {
-      ruta: '/formulario',
+      ruta: '/home',
       icono: 'reader-outline',
-      etiqueta: 'Formulario'
+      etiqueta: 'Ramos'
     },
     {
-      ruta: '/action-sheet',
-      icono: 'arrow-up',
-      etiqueta: 'Action Sheets'
+      ruta: '/login',
+      icono: 'warning-outline',
+      etiqueta: 'Cerrar sesion'
     }
   ]
-  public actionSheetButtons = [
-    {
-      text: 'Borrara',
-      role: 'destructive',
-      data: {
-        action: 'delete',
-      },
-    },
-    {
-      text: 'Formularios',
-      handler: () => {
-        this.router.navigate(['/repasoconceptos']);
-        this.metodoEjemplo();
-      },
 
-      data: {
-        action: 'share',
-      },
+  asignaturas:MenuItem[]=[
+    {
+      ruta:'/ramos',
+      icono:'reader-outline',
+      etiqueta:'Matemáticas'
     },
     {
-      text: 'Cancelar',
-      role: 'cancel',
-      data: {
-        action: 'cancel',
-      },
-    },
+      ruta:'/ramos',
+      icono:'reader-outline',
+      etiqueta:'Historia'
+    },    
+    {
+      ruta:'/ramos',
+      icono:'reader-outline',
+      etiqueta:'Biología'
+    },    
+    {
+      ruta:'/ramos',
+      icono:'reader-outline',
+      etiqueta:'Química'
+    },    
+    {
+      ruta:'/ramos',
+      icono:'reader-outline',
+      etiqueta:'Inglés'
+    },  
+    {
+      ruta:'/ramos',
+      icono:'reader-outline',
+      etiqueta:'Física'
+    }
+  
   ];
-  constructor(private router: Router) { }
+
+
+
+
+
+
+  constructor(private router: Router,private menuCtrl: MenuController ) { }
+
+  ionViewWillLeave() {
+    this.menuCtrl.close(); // Cerrar el menú cuando sale de la vista
+  }
+
 
   ngOnInit() {
   }

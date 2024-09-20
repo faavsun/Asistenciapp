@@ -1,0 +1,69 @@
+<ion-menu side="end" contentId="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Cuenta</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">Opciones
+    <ion-item routerLink="{{item.ruta}}" detail="true" *ngFor="let item of elementos">
+      <ion-icon name="{{item.icono}}" slot="start"></ion-icon>
+      <ion-label>{{item.etiqueta}}</ion-label>
+    </ion-item>
+  </ion-content>
+
+</ion-menu>
+<div class="ion-page" id="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title class="ion-text-capitalize">Administrador</ion-title>
+      <ion-buttons slot="end">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+
+
+
+
+
+  <ion-content class="ion-padding">
+
+
+
+
+    <ion-list [inset]="true" lines="inset" mode="ios" class="scrollable-list">
+      <ion-list-header mode="ios" color="primary" class="ion-text-center">
+        <ion-label>Listado de Asignaturas</ion-label>
+      </ion-list-header>
+  
+      <ion-accordion-group>
+        <ion-accordion *ngFor="let asignatura of asignaturas">
+          <ion-item slot="header">
+            <ion-icon name="{{asignatura.icono}}" slot="start"></ion-icon>
+            <ion-label>{{asignatura.etiqueta}}</ion-label>
+          </ion-item>
+          <div class="ion-padding" slot="content">
+            <ion-list>
+              <ion-item *ngFor="let seccion of asignatura.secciones" button [routerLink]="[asignatura.ruta]">
+                <ion-label>{{seccion}}</ion-label>
+              </ion-item>
+            </ion-list>
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
+    </ion-list>
+
+
+
+
+
+
+    <ion-button (click)="Agregar()" expand="block" fill="clear" shape="round">
+      <ion-icon slot="start" name="add"></ion-icon>
+      Añadir asignatura
+    </ion-button>
+
+
+  </ion-content>
+</div>

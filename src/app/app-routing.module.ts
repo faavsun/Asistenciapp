@@ -20,17 +20,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/alertas/alertas.module').then( m => m.AlertasPageModule)
   },
   {
-    path: 'formulario',
-    loadChildren: () => import('./pages/formulario/formulario.module').then( m => m.FormularioPageModule)
-  },
-  {
-    path: 'action-sheet',
-    loadChildren: () => import('./pages/action-sheet/action-sheet.module').then( m => m.ActionSheetPageModule)
-  },
-  {
     path: 'repasoconceptos',
     loadChildren: () => import('./pages/repasoconceptos/repasoconceptos.module').then( m => m.RepasoconceptosPageModule)
-  },  {
+  },
+  {
     path: 'registro',
     loadChildren: () => import('./pages/registro/registro.module').then( m => m.RegistroPageModule)
   },
@@ -46,6 +39,50 @@ const routes: Routes = [
     path: 'perfil',
     loadChildren: () => import('./pages/perfil/perfil.module').then( m => m.PerfilPageModule)
   },
+
+  {
+    path: 'ramos',
+    loadChildren: () => import('./pages/ramos/ramos.module').then( m => m.RamosPageModule)
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
+  },
+  {
+    path: 'marcar',
+    loadChildren: () => import('./pages/marcar/marcar.module').then( m => m.MarcarPageModule)
+  },
+  {
+    path: 'home-profesor',
+    loadChildren: () => import('./pages/home-profesor/home-profesor.module').then( m => m.HomeProfesorPageModule)
+  },
+  {
+    path: 'ramos-profesor',
+    loadChildren: () => import('./pages/ramos-profesor/ramos-profesor.module').then( m => m.RamosProfesorPageModule)
+  },
+  {
+    path: 'generar-profesor',
+    loadChildren: () => import('./pages/generar-profesor/generar-profesor.module').then( m => m.GenerarProfesorPageModule)
+  },
+  {
+    path: 'home-admin',
+    loadChildren: () => import('./pages/home-admin/home-admin.module').then( m => m.HomeAdminPageModule)
+  },
+  {
+    path: 'ramos-admin',
+    loadChildren: () => import('./pages/ramos-admin/ramos-admin.module').then( m => m.RamosAdminPageModule)
+  },
+  {
+    path: 'asignatura-admin',
+    loadChildren: () => import('./pages/asignatura-admin/asignatura-admin.module').then( m => m.AsignaturaAdminPageModule)
+  },
+  {
+    path: 'asignatura-editar-admin',
+    loadChildren: () => import('./pages/asignatura-editar-admin/asignatura-editar-admin.module').then( m => m.AsignaturaEditarAdminPageModule)
+  },
+
+
+
 
 
 ];
