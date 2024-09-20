@@ -3,12 +3,15 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: 'home',
-    loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
+    path: 'lanzamiento',
+    loadChildren: () => import('./pages/lanzamiento/lanzamiento.module').then( m => m.LanzamientoPageModule)
   },
+
+
+
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'lanzamiento',
     pathMatch: 'full'
   },
   {
@@ -27,10 +30,16 @@ const routes: Routes = [
     path: 'registro',
     loadChildren: () => import('./pages/registro/registro.module').then( m => m.RegistroPageModule)
   },
+
   {
-    path: 'lanzamiento',
-    loadChildren: () => import('./pages/lanzamiento/lanzamiento.module').then( m => m.LanzamientoPageModule)
+    path: 'home',
+    loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
   },
+
+
+
+
+
   {
     path: 'olvidada',
     loadChildren: () => import('./pages/olvidada/olvidada.module').then( m => m.OlvidadaPageModule)

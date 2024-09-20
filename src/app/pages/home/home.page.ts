@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 })
 export class HomePage implements OnInit {
 
+
+  //es del menu lateral
   elementos: MenuItem[] = [
     {
       ruta: '/perfil',
@@ -17,37 +19,12 @@ export class HomePage implements OnInit {
       etiqueta: 'perfil'
     },
     {
-      ruta: '/olvidada',
-      icono: 'reader-outline',
-      etiqueta: 'olvidada'
-    },
-    {
-      ruta: '/lanzamiento',
-      icono: 'reader-outline',
-      etiqueta: 'Lanzamiento'
-    },
-    {
-      ruta: '/registro',
-      icono: 'reader-outline',
-      etiqueta: 'Registro'
-    },
-    {
-      ruta: '/botones',
-      icono: 'radio-button-on-outline',
-      etiqueta: 'Perfil'
-    },
-    {
-      ruta: '/alertas',
-      icono: 'warning-outline',
-      etiqueta: 'Alertas'
-    },
-    {
       ruta: '/home',
       icono: 'reader-outline',
       etiqueta: 'Ramos'
     },
     {
-      ruta: '/login',
+      ruta: '/lanzamiento',
       icono: 'warning-outline',
       etiqueta: 'Cerrar sesion'
     }

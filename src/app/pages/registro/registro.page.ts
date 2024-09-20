@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registro',
@@ -6,12 +7,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./registro.page.scss'],
 })
 export class RegistroPage implements OnInit {
-
-  constructor() { }
+  aceptaTerminos = false;
+  constructor(private router:Router) { }
 
   ngOnInit() {
   }
   Registrarse() {
-
+    this.router.navigate(['/login'])
   }
 }

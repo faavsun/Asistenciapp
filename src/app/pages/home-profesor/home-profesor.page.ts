@@ -26,14 +26,9 @@ export class HomeProfesorPage implements OnInit {
   //es del menu lateral
   elementos:MenuItem[]=[
     {
-      ruta:'/botones',
+      ruta:'/perfil',
       icono:'radio-button-on-outline',
       etiqueta:'Perfil'
-    },
-    {
-      ruta:'/alertas',
-      icono:'warning-outline',
-      etiqueta:'Alertas'
     },
     {
       ruta:'/home-profesor',
@@ -41,7 +36,7 @@ export class HomeProfesorPage implements OnInit {
       etiqueta:'Ramos'
     },
     {
-      ruta:'/login',
+      ruta: '/lanzamiento',
       icono:'warning-outline',
       etiqueta:'Cerrar sesion'
     }

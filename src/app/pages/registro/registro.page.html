@@ -25,11 +25,13 @@
       <ion-label position="floating">Correo</ion-label>
       <ion-input type="email" required placeholder=""></ion-input>
     </ion-item>
-    <ion-item>
-      <ion-checkbox>Acepta los terminos y condiciones</ion-checkbox>
-    </ion-item>
 
-    <ion-button expand="block" type="submit" fill="solid" color="tertiary" [disabled]="miForm.invalid">
+<!--para deshabilitar boton en caso que no acepte los terminos-->
+  <ion-item>
+    <ion-checkbox [(ngModel)]="aceptaTerminos" name="terminos">Acepta los términos y condiciones</ion-checkbox>
+  </ion-item>
+
+    <ion-button expand="block" type="submit" fill="solid" color="tertiary" [disabled]="!aceptaTerminos || miForm.invalid">
       Registrarse
     </ion-button>
   </form>

@@ -38,7 +38,7 @@ export class LoginPage implements OnInit {
 
   }
   recuperar(){
-    this.router.navigate(['/home'])
+    this.router.navigate(['/olvidada'])
   }
 
 }

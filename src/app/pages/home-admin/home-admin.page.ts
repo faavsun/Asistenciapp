@@ -23,14 +23,9 @@ export class HomeAdminPage implements OnInit {
   //es del menu lateral
   elementos:MenuItem[]=[
     {
-      ruta:'/botones',
+      ruta:'/perfil',
       icono:'radio-button-on-outline',
       etiqueta:'Perfil'
-    },
-    {
-      ruta:'/alertas',
-      icono:'warning-outline',
-      etiqueta:'Alertas'
     },
     {
       ruta:'/home-admin',
@@ -38,7 +33,7 @@ export class HomeAdminPage implements OnInit {
       etiqueta:'Ramos'
     },
     {
-      ruta:'/login',
+      ruta: '/lanzamiento',
       icono:'warning-outline',
       etiqueta:'Cerrar sesion'
     }
