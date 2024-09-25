@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AlertController, NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-cambiar-clave',
@@ -7,9 +9,34 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CambiarClavePage implements OnInit {
 
-  constructor() { }
+  constructor(private router:Router,private alertController: AlertController,private navCtrl: NavController) { }
 
   ngOnInit() {
   }
+  async cambiar() {
+    await this.presentAlert();
 
+  }
+
+  async presentAlert() {
+    const alert = await this.alertController.create({
+      header: 'Contraseña actualizada',
+      message: 'Tu contraseña ha sido actualizada exitosamente.',
+      buttons: [{
+        text: 'OK',
+        role: 'confirm',
+        handler: () => {
+          
+          this.navegar();
+        },
+      },],
+    });
+
+    await alert.present();
+  }
+  
+  navegar()
+  {
+    this.navCtrl.back();
+  }
 }

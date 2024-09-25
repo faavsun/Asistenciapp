@@ -7,14 +7,16 @@ import { IonicModule } from '@ionic/angular';
 import { CambiarClavePageRoutingModule } from './cambiar-clave-routing.module';
 
 import { CambiarClavePage } from './cambiar-clave.page';
+import { ComponentsModule } from "../../components/components.module";
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    CambiarClavePageRoutingModule
-  ],
+    CambiarClavePageRoutingModule,
+    ComponentsModule
+],
   declarations: [CambiarClavePage]
 })
 export class CambiarClavePageModule {}

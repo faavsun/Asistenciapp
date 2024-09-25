@@ -1,13 +1,35 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>cambiar_clave</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-encabezado titulo="Cambiar contraseña"></app-encabezado>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">cambiar_clave</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <ion-text color="primary" class="ion-text-center">
+    <h1>Cambia tu contraseña</h1>
+  </ion-text>
+
+  <form #miForm="ngForm" (ngSubmit)="cambiar()">
+    <ion-item>
+      <ion-label position="floating">Contraseña actual</ion-label>
+      <ion-input type="password" required placeholder="">
+        <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+      </ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Nueva contraseña</ion-label>
+      <ion-input type="password" required placeholder="">
+        <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+      </ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Repita su contraseña</ion-label>
+      <ion-input type="password" required placeholder="">
+        <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+      </ion-input>
+    </ion-item>
+
+
+
+
+    <ion-button class="ion-padding" expand="block" type="submit" fill="solid" color="tertiary" [disabled]="miForm.invalid">
+      Cambiar contraseña
+    </ion-button>
+  </form>
 </ion-content>

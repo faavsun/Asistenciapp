@@ -12,7 +12,7 @@ export class HomePage implements OnInit {
 
   elementos:MenuItem[]=[
     {
-      ruta:'/botones',
+      ruta:'/cambiar-clave',
       icono:'radio-button-on-outline',
       etiqueta:'Perfil'
     },
