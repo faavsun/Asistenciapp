@@ -13,7 +13,7 @@ export class HomePage implements OnInit {
   elementos:MenuItem[]=[
     {
       ruta:'/cambiar-clave',
-      icono:'radio-button-on-outline',
+      icono:'person-outline',
       etiqueta:'Perfil'
     },
     {
@@ -28,7 +28,7 @@ export class HomePage implements OnInit {
     },
     {
       ruta:'/login',
-      icono:'warning-outline',
+      icono:'log-out-outline',
       etiqueta:'Cerrar sesion'
     }
   ]

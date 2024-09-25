@@ -27,7 +27,7 @@ export class HomeProfesorPage implements OnInit {
   elementos:MenuItem[]=[
     {
       ruta:'/botones',
-      icono:'radio-button-on-outline',
+      icono:'person-outline',
       etiqueta:'Perfil'
     },
     {
@@ -42,7 +42,7 @@ export class HomeProfesorPage implements OnInit {
     },
     {
       ruta:'/login',
-      icono:'warning-outline',
+      icono:'log-out-outline',
       etiqueta:'Cerrar sesion'
     }
   ]
