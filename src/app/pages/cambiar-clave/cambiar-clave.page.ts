@@ -30,6 +30,7 @@ export class CambiarClavePage implements OnInit {
           this.navegar();
         },
       },],
+      backdropDismiss: false  //para que no se pulse fuera de la alerta
     });
 
     await alert.present();
