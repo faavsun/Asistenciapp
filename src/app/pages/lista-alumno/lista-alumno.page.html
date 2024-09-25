@@ -2,7 +2,7 @@
 
 <ion-content class="ion-padding" id="main-contente">
   <ion-list [inset]="true" lines="inset" mode="ios" class="scrollable-list">
-    <ion-list-header mode="ios" color="primary" class="ion-text-center">
+    <ion-list-header mode="ios" color="tertiary" class="ion-text-center">
       <ion-label>Lista de Alumnos</ion-label>
     </ion-list-header>
     <ion-item *ngFor="let alumno of alumnos">
@@ -13,6 +13,6 @@
   </ion-list>
 
   <div class="ion-padding">
-    <ion-button (click)="goBack()" class="ion-padding" color="danger" shape="round" expand="block">Volver</ion-button>
+    <ion-button (click)="goBack()" class="ion-padding" color="tertiary" shape="round" expand="block">Volver</ion-button>
   </div>
 </ion-content>

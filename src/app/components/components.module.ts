@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EncabezadoComponent } from './encabezado/encabezado.component';
 import { IonicModule } from '@ionic/angular';
+import { RouterLink } from '@angular/router';
 
 
 
@@ -9,7 +10,8 @@ import { IonicModule } from '@ionic/angular';
   declarations: [EncabezadoComponent],
   imports: [
     CommonModule,
-    IonicModule
+    IonicModule,
+    RouterLink
   ],
   exports:[EncabezadoComponent]
 })

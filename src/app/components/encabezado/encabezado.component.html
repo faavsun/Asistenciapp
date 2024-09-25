@@ -4,7 +4,27 @@
       <ion-back-button defaultHref="lanzamiento" text="Volver" mode="ios"></ion-back-button>
     </ion-buttons>
     <ion-title class="ion-text-capitalize">{{titulo}}</ion-title>
-    <ion-icon slot="end" name="person" class="ion-padding" size="large" color="tertiary"></ion-icon>
+
+
+
+    <ion-menu side="end" contentId="main-content">
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Cuenta</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">Opciones
+        <ion-item routerLink="{{item.ruta}}" detail="true" *ngFor="let item of elementos">
+          <ion-icon name="{{item.icono}}" slot="start"></ion-icon>
+          <ion-label>{{item.etiqueta}}</ion-label>
+        </ion-item>
+      </ion-content>
+    </ion-menu>
+
+
+
+
+
   </ion-toolbar>
 </ion-header>
 

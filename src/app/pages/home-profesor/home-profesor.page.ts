@@ -27,7 +27,7 @@ export class HomeProfesorPage implements OnInit {
   elementos:MenuItem[]=[
     {
       ruta:'/perfil',
-      icono:'radio-button-on-outline',
+      icono: 'person-outline',
       etiqueta:'Perfil'
     },
     {

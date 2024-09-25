@@ -15,7 +15,7 @@ export class HomePage implements OnInit {
   elementos: MenuItem[] = [
     {
       ruta: '/perfil',
-      icono: 'reader-outline',
+      icono: 'person-outline',
       etiqueta: 'perfil'
     },
     {
