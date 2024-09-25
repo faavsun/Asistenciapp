@@ -89,6 +89,14 @@ const routes: Routes = [
     path: 'asignatura-editar-admin',
     loadChildren: () => import('./pages/asignatura-editar-admin/asignatura-editar-admin.module').then( m => m.AsignaturaEditarAdminPageModule)
   },
+  {
+    path: 'lista-alumno',
+    loadChildren: () => import('./pages/lista-alumno/lista-alumno.module').then( m => m.ListaAlumnoPageModule)
+  },
+  {
+    path: 'cambiar-clave',
+    loadChildren: () => import('./pages/cambiar-clave/cambiar-clave.module').then( m => m.CambiarClavePageModule)
+  },
 
 
 
