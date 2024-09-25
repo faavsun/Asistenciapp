@@ -66,6 +66,10 @@ const routes: Routes = [
     path: 'lista-alumno',
     loadChildren: () => import('./pages/lista-alumno/lista-alumno.module').then( m => m.ListaAlumnoPageModule)
   },
+  {
+    path: 'cambiar-clave',
+    loadChildren: () => import('./pages/cambiar-clave/cambiar-clave.module').then( m => m.CambiarClavePageModule)
+  },
 
 
 
