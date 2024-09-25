@@ -16,6 +16,9 @@ export class RamosProfesorPage implements OnInit {
   Generar() {
     this.router.navigate(['/generar-profesor'])
   }
+  Lista() {
+    this.router.navigate(['/lista-alumno'])
+  }
   metodoEjemplo()
   {
     console.log("hola");
