@@ -8,13 +8,13 @@
 
     <ion-content>
       <ion-list>
-        <ion-item routerLink="/perfil">Perfil
+        <ion-item  (click)="CloseMenu()"   routerLink="/perfil" menuClose>Perfil
           <ion-icon slot="start" name="person-outline"></ion-icon>
         </ion-item>
-        <ion-item routerLink="/home">Ramos
+        <ion-item  (click)="CloseMenu()" routerLink="/home" menuClose>Ramos
           <ion-icon slot="start" name="reader-outline"></ion-icon>
         </ion-item>
-        <ion-item routerLink="/lanzamiento">Cerrar sesion
+        <ion-item (click)="CloseMenu()" routerLink="/lanzamiento" menuClose>Cerrar sesion
           <ion-icon slot="start" name="log-out-outline"></ion-icon>
         </ion-item>
         <!-- Agrega más ítems aquí -->

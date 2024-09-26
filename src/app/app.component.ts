@@ -7,10 +7,10 @@ import { MenuController } from '@ionic/angular';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor(private menuCtrl: MenuController) {}
+  constructor(private menu: MenuController) {}
 
 
-  ionViewWillLeave() {
-    this.menuCtrl.close(); // Cerrar el menú cuando sale de la vista
+  CloseMenu() {
+    this.menu.close(); // Cerrar el menú cuando sale de la vista
   }
 }
