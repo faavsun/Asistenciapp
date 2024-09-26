@@ -165,11 +165,6 @@ export class HomeAdminPage implements OnInit {
     // Aquí puedes manejar la lógica de navegación o abrir una vista específica para la sección seleccionada.
   }
 
-
-
-  ionViewWillLeave() {
-    this.menuCtrl.close(); // Cerrar el menú cuando sale de la vista
-  }
   Agregar(){
     this.router.navigate(['/asignatura-admin'])
   }
