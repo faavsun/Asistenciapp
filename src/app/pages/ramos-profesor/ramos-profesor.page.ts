@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-ramos-profesor',
@@ -9,9 +10,10 @@ import { Router } from '@angular/router';
 export class RamosProfesorPage implements OnInit {
 
 
-  constructor(private router:Router) { }
+  constructor(private router:Router,private menuCtrl: MenuController) { }
 
   ngOnInit() {
+    this.menuCtrl.enable(true); // Desactivar el menú en esta vista
   }
   Generar() {
     this.router.navigate(['/generar-profesor'])

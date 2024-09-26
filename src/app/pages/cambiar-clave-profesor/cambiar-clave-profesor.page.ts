@@ -4,18 +4,19 @@ import { AlertController, NavController } from '@ionic/angular';
 import { MenuController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-cambiar-clave',
-  templateUrl: './cambiar-clave.page.html',
-  styleUrls: ['./cambiar-clave.page.scss'],
+  selector: 'app-cambiar-clave-profesor',
+  templateUrl: './cambiar-clave-profesor.page.html',
+  styleUrls: ['./cambiar-clave-profesor.page.scss'],
 })
-export class CambiarClavePage implements OnInit {
+export class CambiarClaveProfesorPage implements OnInit {
+
 
   constructor(private router:Router,private alertController: AlertController,private navCtrl: NavController,private menuCtrl: MenuController) { }
 
   ngOnInit() {
     this.menuCtrl.enable(true); // activar el menú en esta vista
   }
-  async cambiar() {
+  async cambiarp() {
     await this.presentAlert();
 
   }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { MenuItem } from 'src/app/interfaces/menu-item';
+import { MenuController } from '@ionic/angular';
 
 
 interface estudiantes {
@@ -141,9 +142,10 @@ export class ListaAlumnoPage implements OnInit {
     }
   ];
 
-  constructor(private navCtrl: NavController) { }
+  constructor(private navCtrl: NavController,private menuCtrl: MenuController) { }
 
   ngOnInit() {
+    this.menuCtrl.enable(true); // Desactivar el menú en esta vista
   }
 
 

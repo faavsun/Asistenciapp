@@ -3,29 +3,19 @@ import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-ramos',
-  templateUrl: './ramos.page.html',
-  styleUrls: ['./ramos.page.scss'],
+  selector: 'app-perfil-profesor',
+  templateUrl: './perfil-profesor.page.html',
+  styleUrls: ['./perfil-profesor.page.scss'],
 })
-export class RamosPage implements OnInit {
-
-
-
-
-
-
-  
+export class PerfilProfesorPage implements OnInit {
 
   constructor(private router:Router,private menuCtrl: MenuController) { }
 
   ngOnInit() {
     this.menuCtrl.enable(true); // Desactivar el menú en esta vista
   }
-  Marcar() {
-    this.router.navigate(['/marcar'])
-  }
-  metodoEjemplo()
-  {
-    console.log("hola");
+  
+  cambio(){
+    this.router.navigate(['/cambiar-clave-profesor'])
   }
 }

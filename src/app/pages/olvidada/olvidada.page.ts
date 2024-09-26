@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, NavController } from '@ionic/angular';
+import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-olvidada',
@@ -9,10 +10,13 @@ import { AlertController } from '@ionic/angular';
 })
 export class OlvidadaPage implements OnInit {
 
-  constructor(private router:Router,private alertController: AlertController) { }
+  constructor(private router:Router,private alertController: AlertController,private menuCtrl: MenuController,private navCtrl: NavController) { }
 
   ngOnInit() {
+    this.menuCtrl.enable(false); // Desactivar el menú en esta vista
   }
+
+
   async olvidada() {
     await this.presentAlert();
 
@@ -38,5 +42,11 @@ export class OlvidadaPage implements OnInit {
   navegar()
   {
     this.router.navigate(['/lanzamiento'])
+  }
+
+
+
+  goBack() {
+    this.navCtrl.back(); // Navega a la vista anterior
   }
 }

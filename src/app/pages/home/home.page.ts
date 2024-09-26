@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MenuItem } from '../../interfaces/menu-item';
 import { MenuController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { AppComponent } from 'src/app/app.component';
 
 @Component({
   selector: 'app-home',
@@ -69,10 +70,12 @@ export class HomePage implements OnInit {
 
 
 
-  constructor(private router: Router,private menuCtrl: MenuController ) { }
+  constructor(private appComponent: AppComponent,private router: Router,private menuCtrl: MenuController ) { }
 
 
   ngOnInit() {
+    this.appComponent.selectedMenuId = 'first';
+    this.menuCtrl.enable(true); // Desactivar el menú en esta vista
   }
 
   metodoEjemplo() {

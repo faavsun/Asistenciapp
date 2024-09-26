@@ -7,7 +7,10 @@ import { MenuController } from '@ionic/angular';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor(private menu: MenuController) {}
+  selectedMenuId: string = 'first'; // Valor por defecto, puede cambiarse según la vista
+  constructor(private menu: MenuController) {
+    
+  }
 
 
   CloseMenu() {

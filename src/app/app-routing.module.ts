@@ -68,7 +68,15 @@ const routes: Routes = [
   {
     path: 'cambiar-clave',
     loadChildren: () => import('./pages/cambiar-clave/cambiar-clave.module').then( m => m.CambiarClavePageModule)
+  },  {
+    path: 'cambiar-clave-profesor',
+    loadChildren: () => import('./pages/cambiar-clave-profesor/cambiar-clave-profesor.module').then( m => m.CambiarClaveProfesorPageModule)
   },
+  {
+    path: 'perfil-profesor',
+    loadChildren: () => import('./pages/perfil-profesor/perfil-profesor.module').then( m => m.PerfilProfesorPageModule)
+  },
+
 
 
 

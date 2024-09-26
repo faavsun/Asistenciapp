@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Usuario } from 'src/app/interfaces/usuario';
+import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -13,10 +14,12 @@ export class LoginPage implements OnInit {
     username:'',
     password:''
   }
-  constructor(private router:Router) { }
+  constructor(private router:Router,private menuCtrl: MenuController) { }
 
   ngOnInit() {
+    this.menuCtrl.enable(false); // Desactivar el menú en esta vista
   }
+
 
   iniciarSesion(){
     console.log("Subimit del formulario");

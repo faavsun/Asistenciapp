@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MenuItem } from '../../interfaces/menu-item';
 import { MenuController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { AppComponent } from 'src/app/app.component';
 
 
 interface Asignatura {
@@ -158,7 +159,7 @@ export class HomeProfesorPage implements OnInit {
 
 
 
-  constructor(private router:Router,private menuCtrl: MenuController ) { }
+  constructor(private appComponent: AppComponent,private router:Router,private menuCtrl: MenuController ) { }
 
  
   abrirSeccion(seccion: string) {
@@ -168,6 +169,8 @@ export class HomeProfesorPage implements OnInit {
 
 
   ngOnInit() {
+    this.appComponent.selectedMenuId = 'profesor-menu';
+    this.menuCtrl.enable(true); // Desactivar el menú en esta vista
   }
 
   metodoEjemplo()

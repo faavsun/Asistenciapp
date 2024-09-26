@@ -1,4 +1,3 @@
-<app-encabezado titulo="Registro"></app-encabezado>
 
 <ion-content class="ion-padding">
   <ion-text color="tertiary" class="ion-text-center">
@@ -31,8 +30,12 @@
     <ion-checkbox [(ngModel)]="aceptaTerminos" name="terminos">Acepta los términos y condiciones</ion-checkbox>
   </ion-item>
 
-    <ion-button expand="block" type="submit" fill="solid" color="tertiary" [disabled]="!aceptaTerminos || miForm.invalid">
+    <ion-button class="ion-padding" expand="block" type="submit" fill="solid" color="tertiary" [disabled]="!aceptaTerminos || miForm.invalid">
       Registrarse
     </ion-button>
+    
   </form>
+  <ion-button (click)="goBack()" class="ion-padding" expand="block" type="submit" fill="solid" color="tertiary">
+    Cancelar
+  </ion-button>
 </ion-content>
