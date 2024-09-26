@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AppComponent } from 'src/app/app.component';
 
 @Component({
   selector: 'app-ramos-profesor',
@@ -9,9 +10,10 @@ import { Router } from '@angular/router';
 export class RamosProfesorPage implements OnInit {
 
 
-  constructor(private router:Router) { }
+  constructor(private router:Router,private appComponent: AppComponent) { }
 
   ngOnInit() {
+    this.appComponent.selectedMenuId = 'profesor-menu';
   }
   Generar() {
     this.router.navigate(['/generar-profesor'])

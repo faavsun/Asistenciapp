@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
+import { AppComponent } from 'src/app/app.component';
 import { MenuItem } from 'src/app/interfaces/menu-item';
 
 
@@ -141,9 +142,13 @@ export class ListaAlumnoPage implements OnInit {
     }
   ];
 
-  constructor(private navCtrl: NavController) { }
+  constructor(private navCtrl: NavController,private appComponent: AppComponent) { }
 
+
+
+  //poner esto
   ngOnInit() {
+    this.appComponent.selectedMenuId = 'profesor-menu';
   }
 
 

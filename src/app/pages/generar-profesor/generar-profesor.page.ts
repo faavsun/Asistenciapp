@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { AppComponent } from 'src/app/app.component';
 
 @Component({
   selector: 'app-generar-profesor',
@@ -9,9 +10,10 @@ import { AlertController } from '@ionic/angular';
 })
 export class GenerarProfesorPage implements OnInit {
 
-  constructor(private router:Router,private alertController: AlertController) { }
+  constructor(private router:Router,private alertController: AlertController,private appComponent: AppComponent) { }
 
   ngOnInit() {
+    this.appComponent.selectedMenuId = 'profesor-menu';
   }
 
 

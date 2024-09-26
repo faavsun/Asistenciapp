@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MenuItem } from '../../interfaces/menu-item';
 import { MenuController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { AppComponent } from 'src/app/app.component';
 
 @Component({
   selector: 'app-home',
@@ -72,7 +73,7 @@ export class HomePage implements OnInit {
 
 
 
-  constructor(private router:Router,private menuCtrl: MenuController ) { }
+  constructor(private router:Router,private menuCtrl: MenuController,private appComponent: AppComponent ) { }
 
   ionViewWillLeave() {
     this.menuCtrl.close(); // Cerrar el menú cuando sale de la vista
@@ -80,6 +81,7 @@ export class HomePage implements OnInit {
 
 
   ngOnInit() {
+    this.appComponent.selectedMenuId = 'first';
   }
 
   metodoEjemplo()

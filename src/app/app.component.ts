@@ -6,5 +6,6 @@ import { Component } from '@angular/core';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
+  selectedMenuId: string = 'first'; // Valor por defecto, puede cambiarse según la vista
   constructor() {}
 }
