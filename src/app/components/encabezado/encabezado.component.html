@@ -1,5 +1,12 @@
 <ion-header>
+
+
+
+
   <ion-toolbar>
+
+
+
     <ion-buttons slot="start">
       <ion-back-button defaultHref="lanzamiento" text="Volver" mode="ios"></ion-back-button>
     </ion-buttons>
@@ -7,24 +14,26 @@
 
 
 
-    <ion-menu side="end" contentId="main-content">
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>Cuenta</ion-title>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content class="ion-padding">Opciones
-        <ion-item routerLink="{{item.ruta}}" detail="true" *ngFor="let item of elementos">
-          <ion-icon name="{{item.icono}}" slot="start"></ion-icon>
-          <ion-label>{{item.etiqueta}}</ion-label>
-        </ion-item>
-      </ion-content>
-    </ion-menu>
+
+
+
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
 
 
 
 
 
+
+    
   </ion-toolbar>
+
+
+
+
+
+
+
 </ion-header>
 

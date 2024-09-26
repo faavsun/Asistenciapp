@@ -1,31 +1,4 @@
-<ion-menu side="end" contentId="main-content">
-  <ion-header>
-    <ion-toolbar>
-      <ion-title>Cuenta</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content class="ion-padding">Opciones
-    <ion-item routerLink="{{item.ruta}}" detail="true" *ngFor="let item of elementos">
-      <ion-icon name="{{item.icono}}" slot="start"></ion-icon>
-      <ion-label>{{item.etiqueta}}</ion-label>
-    </ion-item>
-  </ion-content>
-
-</ion-menu>
-<div class="ion-page" id="main-content">
-  <ion-header>
-    <ion-toolbar>
-      <ion-title class="ion-text-capitalize">Profesor</ion-title>
-      <ion-buttons slot="end">
-        <ion-menu-button></ion-menu-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
-
-
-
-
-
+<app-encabezado titulo="Alumnos"></app-encabezado>
 
   <ion-content class="ion-padding">
 
@@ -58,4 +31,3 @@
 
 
   </ion-content>
-</div>
