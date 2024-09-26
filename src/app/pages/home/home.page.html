@@ -1,10 +1,10 @@
-<app-encabezado titulo="Alumnos"></app-encabezado>
+<app-encabezado titulo="Alumno"></app-encabezado>
 
 
   <ion-content class="ion-padding">
     <ion-list [inset]="true" lines="inset" mode="ios">
       <ion-list-header mode="ios" color="tertiary" class="ion-text-center">
-        <ion-label>Listado</ion-label>
+        <ion-label>Lista de asignaturas</ion-label>
       </ion-list-header>
       <ion-item routerLink="{{asignatura.ruta}}" detail="true" *ngFor="let asignatura of asignaturas">
         <ion-icon name="{{asignatura.icono}}" slot="start"></ion-icon>
