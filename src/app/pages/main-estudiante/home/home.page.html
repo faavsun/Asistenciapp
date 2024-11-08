@@ -1,0 +1,20 @@
+<app-encabezado titulo="Alumno"></app-encabezado>
+
+<ion-content class="ion-padding">
+  <ion-list [inset]="true" lines="inset" mode="ios">
+    <ion-list-header mode="ios" color="tertiary" class="ion-text-center">
+      <ion-label>Lista de asignaturas</ion-label>
+    </ion-list-header>
+    <ion-item 
+      (click)="abrirDetalleSeccion(asignaturaItem.seccionId)" 
+      detail="true" 
+      *ngFor="let asignaturaItem of asignaturas">
+      <ion-icon name="reader-outline" slot="start"></ion-icon>
+      <ion-label>{{ asignaturaItem.asignatura.nombre }}</ion-label> <!-- Mostrar el nombre de la asignatura -->
+    </ion-item>
+  </ion-list>
+
+  <ion-button (click)="signOut()" expand="block" fill="clear" shape="round">
+    Cerrar sesión
+  </ion-button>
+</ion-content>

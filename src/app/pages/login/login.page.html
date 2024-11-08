@@ -1,0 +1,63 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button color="tertiary" defaultHref="lanzamiento" text="Volver" mode="ios"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-text color="tertiary" class="ion-text-center">
+    <h1>Inicio de sesion</h1>
+  </ion-text>
+
+  <div class="d-flex-center">
+
+    <form [formGroup]="form" class="auth-form" (ngSubmit)="submit()" (keypress.enter)="submit()">
+
+<!--=========email============-->
+      <app-custom-input 
+      autocomplete="email" 
+      icon="mail-outline" 
+      [control]="form.controls.email" 
+      type="email"
+      label="Correo"
+      ></app-custom-input>
+
+      <div class="validators" *ngIf="form.controls.email.errors && form.controls.email.touched">
+        <div *ngIf="form.controls.email.errors?.['required']">El correo es requerido</div>
+        <div *ngIf="form.controls.email.errors?.['email']">Ingrese un correo valido</div>
+      </div>
+
+<!--=========password============-->
+      <app-custom-input 
+      icon="lock-closed-outline" 
+      [control]="form.controls.password" 
+      type="password"
+      label="Contraseña"
+      ></app-custom-input>
+
+      <div class="validators" *ngIf="form.controls.password.errors && form.controls.password.touched">
+        <div *ngIf="form.controls.password.errors?.['required']">La contraseña es requerido</div>
+      </div>
+
+
+      
+      
+      <ion-button class="ion-padding" color="tertiary" expand="block" mode="ios" class="submit" type="submit" [disabled]="form.invalid">
+        Ingresar
+        <ion-icon slot="end" name="log-in-outline"></ion-icon>
+      </ion-button>
+      
+      <ion-button class="ion-padding" (click)="recuperar()" color="tertiary" expand="full" fill="outline">
+        ¿Olvidaste tu contraseña?
+      </ion-button>
+      
+
+    </form>
+
+  </div>
+
+
+
+</ion-content>

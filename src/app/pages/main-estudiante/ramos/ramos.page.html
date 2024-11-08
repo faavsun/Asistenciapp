@@ -1,0 +1,20 @@
+<app-encabezado titulo="Asistencia"></app-encabezado>
+
+<ion-content class="ion-padding">
+  <ion-item>
+    <ion-label>
+      <h1>{{ asignatura?.nombre }}</h1> <!-- Nombre de la asignatura -->
+      <p>Profesor: {{ seccion?.profesor }}</p> <!-- Nombre del profesor -->
+      <p>Aula: {{ seccion?.aula }}</p> <!-- Aula -->
+    </ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-label>
+      <h1>Asistencia</h1>
+      <p>Porcentaje: <!--{{ seccion.asistenciaPorcentaje }}%--></p> <!-- Porcentaje de asistencia -->
+      <p>N° de clases: <!--{{ seccion.clasesAsistidas }}/{{ seccion.totalClases }}--></p> <!-- Número de clases -->
+    </ion-label>
+  </ion-item>
+
+  <ion-button (click)="Marcar()" color="tertiary" class="ion-padding" shape="round" expand="block">Marcar Asistencia</ion-button>
+</ion-content>

@@ -1,0 +1,46 @@
+<app-encabezado titulo="Perfil"></app-encabezado>
+<ion-content class="ion-padding">
+  <ion-list>
+    <ion-item>
+      <ion-label>
+        <strong>Nombre completo:</strong>
+      </ion-label>
+      <ion-text>
+        {{user().name +' '+ user().lastname}}
+      </ion-text>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>
+        <strong>RUT:</strong>
+      </ion-label>
+      <ion-text>
+        {{user().uid}}
+      </ion-text>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>
+        <strong>Correo electrónico:</strong>
+      </ion-label>
+      <ion-text>
+        {{user().email}}
+      </ion-text>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>
+        <strong>Area:</strong>
+      </ion-label>
+      <ion-text>
+        {{user().tipo}}
+      </ion-text>
+    </ion-item>
+  </ion-list>
+
+  <ion-button (click)="cambio()" class="ion-padding" color="tertiary" shape="round" expand="block">
+    Cambiar contraseña
+  </ion-button>
+
+
+</ion-content>

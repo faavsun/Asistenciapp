@@ -1,0 +1,37 @@
+<app-encabezado titulo="Asistencia"></app-encabezado>
+
+<ion-content class="ion-padding">
+  <ion-item>
+    <ion-label>
+      <h1>{{ asignatura?.nombre || 'Nombre de la Asignatura' }}</h1>
+      <p>Profesor: {{ seccion?.profesor }}</p>
+      <p>Aula: {{ seccion?.aula || 'Aula' }}</p>
+    </ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-label>
+      <h2>Información</h2>
+      <p>Fecha: {{ currentDate }}_____Hora: {{ currentTime}}</p>
+      <p>Ubicacion: {{ latitude }}, {{ longitude }}</p>
+    </ion-label>
+  </ion-item>
+
+  <div class="segment-content">
+    <img class="ion-padding" src="../../../assets/img/plantilla.png" alt="Qr-ejemplo">
+    <h6 class="ion-text-center">Escanea para registrar tu Asistencia</h6>
+  </div>
+
+  <ion-button (click)="startScan()" class="submit" color="tertiary" class="ion-padding" shape="round" expand="block">
+    Marcar
+    <ion-icon slot="end" name="scan-outline"></ion-icon>
+  </ion-button>
+
+  <!--====================resultado de scan==================-->
+
+  <ion-item class="result" *ngIf="ScanResult" lines="none">
+    <ion-label>
+      <p>Scan Result</p>
+      <div>{{ ScanResult }}</div>
+    </ion-label>
+  </ion-item>
+</ion-content>

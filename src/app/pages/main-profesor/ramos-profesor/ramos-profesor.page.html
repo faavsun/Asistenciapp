@@ -1,0 +1,21 @@
+<app-encabezado titulo="Asignatura"></app-encabezado>
+
+<ion-content class="ion-padding">
+  <ion-item>
+    <ion-label>
+      <h1>{{ nombreAsignatura }}</h1>
+      <p>Profesor: {{ profesorNombre }}</p>
+      <p>Aula: {{ aula }}</p>
+    </ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-label>
+      <h1>Detalle</h1>
+      <p>Sección: {{ seccion?.nombre }}</p>
+      <p>Alumnos: {{ 'xx' }}</p>
+    </ion-label>
+  </ion-item>
+
+  <ion-button (click)="Generar()" color="tertiary" class="ion-padding" shape="round" expand="block">Generar código QR</ion-button>
+  <ion-button (click)="Lista()" color="tertiary" class="ion-padding" shape="round" expand="block">Lista de Alumnos</ion-button>
+</ion-content>

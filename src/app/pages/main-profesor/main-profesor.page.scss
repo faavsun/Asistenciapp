@@ -1,0 +1,14 @@
+ion-item{
+    color: var(--ion-color-light);
+
+    ion-icon{
+        color: var(--ion-color-light);
+    }
+
+    &.active{
+        color: var(--ion-color-warning);
+        ion-icon{
+            color: var(--ion-color-warning);
+        }
+    }
+}

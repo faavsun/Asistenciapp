@@ -1,0 +1,35 @@
+<app-encabezado titulo="Profesor"></app-encabezado>
+
+<ion-content class="ion-padding">
+
+
+
+
+
+  <ion-list [inset]="true" lines="inset" mode="ios" class="scrollable-list">
+    <ion-list-header mode="ios" color="tertiary" class="ion-text-center">
+      <ion-label>Lista de asignaturas</ion-label>
+    </ion-list-header>
+
+    <ion-accordion-group>
+      <ion-accordion *ngFor="let asignatura of asignaturas" (ionChange)="cargarSecciones(asignatura.uid)">
+        <ion-item slot="header">
+          <ion-icon name="book-outline" slot="start"></ion-icon>
+          <ion-label>{{ asignatura.nombre }}</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <ion-list *ngIf="seccionesPorAsignatura[asignatura.uid]">
+            <ion-item *ngFor="let seccion of seccionesPorAsignatura[asignatura.uid]" button
+              (click)="abrirDetalleSeccion(seccion.id)">
+              <ion-label>Sección: {{ seccion.nombre }}</ion-label>
+              <ion-label>Profesor: {{ seccion.profesor }}</ion-label>
+            </ion-item>
+          </ion-list>
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
+
+  </ion-list>
+
+
+</ion-content>

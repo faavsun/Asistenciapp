@@ -1,0 +1,34 @@
+<app-encabezado titulo="Asistencia"></app-encabezado>
+
+<ion-content class="ion-padding">
+  <ion-item>
+    <ion-label>
+      <h1>{{ nombreAsignatura }}</h1>
+      <p>Profesor: {{ profesorNombre }}</p>
+      <p>Aula: {{ aula }}</p>
+    </ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-label>
+      <h2>Información</h2>
+      <p>Sección: {{ seccion?.nombre }}</p> <!-- Muestra el ID de la sección -->
+      <p>Fecha: {{ currentDate }} _____ Hora: {{ currentTime }}</p> <!-- Muestra la hora actual -->
+    </ion-label>
+  </ion-item>
+  
+  <ion-grid>
+    <ion-row class="ion-justify-content-center ion-align-items-center" style="height: 100%;">
+      <ion-col size="auto">
+        <div>
+          <!-- Aquí generamos el código QR -->
+          <qr-code [value]="qrData" size="300" errorCorrectionLevel="M"></qr-code>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-button (click)="generateQRCode()" color="tertiary" class="ion-padding" shape="round" expand="block">
+    Generar QR
+  </ion-button>
+  <ion-button (click)="Finalizar()" color="tertiary" class="ion-padding" shape="round" expand="block">Finalizar</ion-button>
+
+</ion-content>
