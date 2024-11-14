@@ -1,0 +1,10 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "componentes_ionic_s1",
+	"webDir": "www",
+	"plugins": {
+		"Geolocation": {
+			"enableHighAccuracy": true
+		}
+	}
+}
