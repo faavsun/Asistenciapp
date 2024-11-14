@@ -95,7 +95,7 @@ export class GenerarProfesorPage implements OnInit {
       this.altitude = coordinates.altitude !== null ? coordinates.altitude : 'N/A'; // Manejar altitud
   
       // Generar el contenido del código QR
-      this.qrData = `UID: ${qrUID}, Fecha: ${this.currentDate}, Hora: ${this.currentTime}, Asignatura: ${this.nombreAsignatura}, Sección: ${this.seccion?.nombre || 'Sin nombre'}, Ubicación: ${this.latitude}, ${this.longitude}, Altitud: ${this.altitude}`;
+      this.qrData = `UID: ${qrUID}, Fecha: ${this.currentDate}, Hora: ${this.currentTime}, Asignatura: ${this.nombreAsignatura}, Sección: ${this.seccionId || 'Sin nombre'}, Ubicación: ${this.latitude}, ${this.longitude}, Altitud: ${this.altitude}`;
       console.log('Latitud:', this.latitude);
       console.log('Longitud:', this.longitude);
       console.log('Altitud:', this.altitude);

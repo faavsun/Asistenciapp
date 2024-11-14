@@ -13,6 +13,7 @@
       <h2>Información</h2>
       <p>Sección: {{ seccion?.nombre }}</p> <!-- Muestra el ID de la sección -->
       <p>Fecha: {{ currentDate }} _____ Hora: {{ currentTime }}</p> <!-- Muestra la hora actual -->
+      <p>Ubicacion: {{ latitude }}, {{ longitude }}, {{altitude}}</p>
     </ion-label>
   </ion-item>
   
@@ -26,9 +27,6 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-  <ion-button (click)="generateQRCode()" color="tertiary" class="ion-padding" shape="round" expand="block">
-    Generar QR
-  </ion-button>
   <ion-button (click)="Finalizar()" color="tertiary" class="ion-padding" shape="round" expand="block">Finalizar</ion-button>
 
 </ion-content>

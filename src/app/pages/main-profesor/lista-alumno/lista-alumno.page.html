@@ -9,7 +9,7 @@
     <ion-item *ngFor="let alumno of estudiantes | async">
       <ion-icon name="person" slot="start"></ion-icon> <!-- Icono por defecto -->
       <ion-label>{{ alumno.name }} {{ alumno.lastname }}</ion-label> <!-- Mostrar nombre y apellido -->
-      <ion-label> asistencias %</ion-label> <!-- Mostrar cantidad de asistencias -->
+      <ion-label>Asistencia:  {{ (alumno.total_asistencia / alumno.seccion.total_clases)*100 }}%</ion-label> <!-- Mostrar cantidad de asistencias -->
     </ion-item>
   </ion-list>
 

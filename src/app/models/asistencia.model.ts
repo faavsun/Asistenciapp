@@ -1,5 +1,5 @@
 export interface Asistencia {
-    uid: string,
+    id: string,
     estudiante_id: string,
     seccion_id: string,
     total_asistencia: number;

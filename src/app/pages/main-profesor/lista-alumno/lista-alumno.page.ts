@@ -36,10 +36,20 @@ export class ListaAlumnoPage implements OnInit {
     this.navCtrl.back(); // Navega a la vista anterior
   }
 
+
+
+
+
+
+
+
+
+
+  
   getEstudiantes(seccionId: string) {
     this.estudiantes = this.firebaseSvc.getEstudiantesBySeccion(seccionId);
     this.estudiantes.subscribe(data => {
-      console.log('Estudiantes en la sección:', data); // Verifica los estudiantes
+      console.log('Estudiantes con su asistencia y sección:', data); // Verifica los datos combinados
       console.table(data); // Muestra los datos en formato de tabla
     }, error => {
       console.error('Error al obtener estudiantes:', error); // Maneja errores

@@ -12,7 +12,7 @@
     <ion-label>
       <h2>Información</h2>
       <p>Fecha: {{ currentDate }}_____Hora: {{ currentTime}}</p>
-      <p>Ubicacion: {{ latitude }}, {{ longitude }}</p>
+      <p>Ubicacion: {{ latitude }}, {{ longitude }}, {{altitude}}</p>
     </ion-label>
   </ion-item>
 
@@ -25,13 +25,3 @@
     Marcar
     <ion-icon slot="end" name="scan-outline"></ion-icon>
   </ion-button>
-
-  <!--====================resultado de scan==================-->
-
-  <ion-item class="result" *ngIf="ScanResult" lines="none">
-    <ion-label>
-      <p>Scan Result</p>
-      <div>{{ ScanResult }}</div>
-    </ion-label>
-  </ion-item>
-</ion-content>

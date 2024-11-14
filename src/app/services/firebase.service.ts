@@ -8,7 +8,7 @@ import { UtilsService } from './utils.service';
 import { Seccion } from '../models/seccion.model';
 import { Asignatura } from '../models/asignatura.model';
 import { AlumnoSeccion } from '../models/alumnoseccion.model';
-import { Observable, switchMap, forkJoin } from 'rxjs';
+import { Observable, switchMap, forkJoin, combineLatest, map } from 'rxjs';
 import { Asistencia } from '../models/asistencia.model';
 
 
@@ -357,7 +357,20 @@ async getUserById(uid: string): Promise<User | null> {
 
 
 
-
+getAlumnosPorSeccion(seccionId: string): Promise<AlumnoSeccion[]> {
+  return this.firestore.collection<AlumnoSeccion>('alumnoseccion', ref => ref.where('seccion', '==', seccionId))
+    .get()
+    .toPromise()
+    .then(snapshot => {
+      const alumnos: AlumnoSeccion[] = [];
+      snapshot.forEach(doc => alumnos.push(doc.data()));
+      return alumnos;
+    })
+    .catch(error => {
+      console.error('Error obteniendo los alumnos:', error);
+      throw error;
+    });
+}
 
 
 
@@ -381,21 +394,63 @@ getEstudiantesBySeccion(seccionId: string): Observable<User[]> {
     switchMap(actions => {
       const uids = actions.map(a => a.payload.doc.data().estudiante);
       console.log('UIDs obtenidos:', uids); // Verifica los UIDs
-      return this.firestore.collection<User>('users', ref => ref.where('uid', 'in', uids)).valueChanges();
+
+      // Obtener los usuarios (estudiantes)
+      const users$ = this.firestore.collection<User>('users', ref => ref.where('uid', 'in', uids)).valueChanges();
+
+      // Obtener las asistencias
+      const asistencia$ = this.firestore.collection<Asistencia>('asistencia', ref => ref.where('seccion_id', '==', seccionId).where('estudiante_id', 'in', uids)).valueChanges();
+
+      // Obtener los detalles de la sección
+      const seccion$ = this.firestore.collection<Seccion>('seccion').doc(seccionId).valueChanges();
+
+      return combineLatest([users$, asistencia$, seccion$]).pipe(
+        map(([users, asistencia, seccion]) => {
+          // Combina los datos de los estudiantes, su asistencia y la sección
+          return users.map(user => {
+            const asistenciaEstudiante = asistencia.find(a => a.estudiante_id === user.uid);
+            return {
+              ...user,
+              total_asistencia: asistenciaEstudiante ? asistenciaEstudiante.total_asistencia : 0, // Asistencia por defecto 0 si no se encuentra
+              seccion: seccion, // Agregamos los detalles de la sección
+            };
+          });
+        })
+      );
     })
   );
 }
 
 
 
-getAsistenciaPorEstudianteYSeccion(estudianteId: string, seccionId: string): Observable<any[]> {
-  return this.firestore.collection('asistencia', ref => 
+
+
+
+
+
+
+
+getAsistenciaPorEstudianteYSeccion(estudianteId: string, seccionId: string): Promise<any[]> {
+  return this.firestore.collection('asistencia', ref =>
     ref.where('estudiante_id', '==', estudianteId)
        .where('seccion_id', '==', seccionId)
-  ).valueChanges(); // Esto devuelve un observable de los cambios en los documentos
+  )
+  .get()
+  .toPromise()
+  .then(snapshot => {
+    if (snapshot.empty) {
+      console.log('No se encontraron registros de asistencia');
+      return [];  // Si no hay registros, devolvemos un array vacío
+    } else {
+      // Mapeamos los documentos a un array de objetos
+      return snapshot.docs.map(doc => doc.data());  // Devuelve todos los datos de los documentos
+    }
+  })
+  .catch(error => {
+    console.error('Error obteniendo la asistencia:', error);
+    return [];  // En caso de error, devolvemos un array vacío
+  });
 }
-
-
 
 
 
@@ -422,7 +477,7 @@ getAsistenciaPorEstudianteYSeccion(estudianteId: string, seccionId: string): Obs
 async updateAsistencia(uid: string, totalAsistencia: number) {
   try {
     const asistenciaDocRef = this.firestore.doc(`asistencia/${uid}`);
-    await asistenciaDocRef.update({ total_asistencias: totalAsistencia });
+    await asistenciaDocRef.update({ total_asistencia: totalAsistencia });
     console.log(`Asistencia actualizada para uid: ${uid} con total_asistencias: ${totalAsistencia}`);
   } catch (error) {
     console.error('Error al actualizar asistencia:', error);
@@ -447,16 +502,59 @@ async getAsistenciaPorUid(uid: string) {
   }
 }
 
-async crearAsistencia(asistenciaData: any) {
+
+
+//////////////////////////ASISTENCIA_QR_MARCAR//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// Método modificado para obtener el documento completo
+async obtenerAsistenciaEstudiantePorSeccion(estudianteId: string, seccionId: string): Promise<Asistencia[]> {
   try {
-    const docRef = await this.firestore.collection('asistencia').add(asistenciaData);
-    console.log('Documento creado con ID: ', docRef.id);
+    const snapshot = await this.firestore.collection('asistencia', ref =>
+      ref.where('estudiante_id', '==', estudianteId)
+         .where('seccion_id', '==', seccionId)
+    ).get().toPromise();
+
+    if (snapshot.empty) {
+      console.log('No se encontraron registros de asistencia');
+      return []; // No se encontraron registros
+    } else {
+      // Mapeamos los documentos y agregamos el 'id' del documento al resultado
+      return snapshot.docs.map(doc => {
+        return {
+          id: doc.id, // El ID del documento es 'doc.id'
+          ...doc.data() as Asistencia // Los datos del documento (total_asistencia, estudiante_id, etc.)
+        };
+      });
+    }
   } catch (error) {
-    console.error('Error al crear el documento de asistencia:', error);
-    throw error; // Lanza el error para manejarlo en el llamador
+    console.error('Error obteniendo la asistencia:', error);
+    return []; // Si ocurre un error, retornamos un arreglo vacío
   }
 }
 
 
+
+
+async actualizarAsistencia(uid: string, totalAsistencia: number) {
+  try {
+    const asistenciaDocRef = this.firestore.doc(`asistencia/${uid}`);
+    await asistenciaDocRef.update({ total_asistencia: totalAsistencia });
+    console.log(`Asistencia actualizada para uid: ${uid} con total_asistencias: ${totalAsistencia}`);
+  } catch (error) {
+    console.error('Error al actualizar asistencia:', error);
+    throw error;
+  }
+}
+
+async crearAsistencia(asistencia: any) {
+  try {
+    const docRef = await this.firestore.collection('asistencia').add(asistencia);
+    console.log('Documento de asistencia creado con ID: ', docRef.id);
+  } catch (error) {
+    console.error('Error al crear el documento de asistencia:', error);
+    throw error;
+  }
+}
 
 }

@@ -14,10 +14,6 @@ export class MainProfesorPage implements OnInit {
   pages = [
     {title: 'Inicio', url: '/main-profesor/home-profesor', icon: 'home-outline'},
     {title: 'Perfil', url: '/main-profesor/perfil-profesor', icon: 'person-outline'},
-    {title: 'ramos', url: '/main-profesor/ramos-profesor', icon: 'person-outline'},
-    {title: 'generar', url: '/main-profesor/generar-profesor', icon: 'person-outline'},
-    {title: 'lista', url: '/main-profesor/lista-alumno', icon: 'person-outline'},
-    {title: 'cambiar', url: '/main-profesor/cambiar-clave-profesor', icon: 'person-outline'},
   ]
 
   router = inject(Router);
