@@ -1,7 +1,0 @@
-{
-  "name": "componentes_ionic_s1",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "angular"
-}
