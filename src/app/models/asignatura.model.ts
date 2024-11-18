@@ -1,4 +1,6 @@
 export interface Asignatura {
-    uid: string,
-    nombre: string;
+    uid?: string,
+    uid_profesor: string,
+    nombre: string,
+    maxEstudiantes?: number;
   }

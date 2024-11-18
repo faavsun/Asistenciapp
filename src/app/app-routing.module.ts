@@ -91,6 +91,14 @@ const routes: Routes = [
   {
     path: 'perfil-profesor',
     loadChildren: () => import('./pages/main-profesor/perfil-profesor/perfil-profesor.module').then( m => m.PerfilProfesorPageModule), canActivate:[AuthGuard]
+  },,
+  {
+    path: 'crear-asignatura',
+    loadChildren: () => import('./pages/main-profesor/crear-asignatura/crear-asignatura.module').then( m => m.CrearAsignaturaPageModule)
+  },
+  {
+    path: 'crear-seccion',
+    loadChildren: () => import('./pages/main-profesor/crear-seccion/crear-seccion.module').then( m => m.CrearSeccionPageModule)
   },
   {
     path: 'main-estudiante',

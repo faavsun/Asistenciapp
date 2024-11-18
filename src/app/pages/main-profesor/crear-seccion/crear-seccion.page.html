@@ -1,0 +1,64 @@
+<app-encabezado titulo="Crear Sección"></app-encabezado>
+<ion-content class="ion-padding">
+  <ion-text color="tertiary" class="ion-text-center">
+    <h1>Crear Sección</h1>
+  </ion-text>
+
+  <div class="d-flex-center">
+
+    <form [formGroup]="form" class="auth-form" (ngSubmit)="submit()" (keypress.enter)="submit()">
+
+      <!--=========Nombre de la Sección============-->
+      <app-custom-input 
+        autocomplete="off" 
+        icon="school-outline" 
+        [control]="form.controls.nombre" 
+        type="text"
+        label="Nombre de la Sección"
+      ></app-custom-input>
+
+      <div class="validators" *ngIf="form.controls.nombre.errors && form.controls.nombre.touched">
+        <div *ngIf="form.controls.nombre.errors?.['required']">El nombre de la sección es requerido</div>
+      </div>
+
+      <!--=========Asignatura (Selector)============-->
+      <ion-item>
+        <ion-label position="floating">Asignatura</ion-label>
+        <ion-select [formControl]="form.controls.asignatura" placeholder="Seleccionar asignatura">
+          <ion-select-option *ngFor="let asignatura of asignaturas" [value]="asignatura.uid">
+            {{ asignatura.nombre }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <div class="validators" *ngIf="form.controls.asignatura.errors && form.controls.asignatura.touched">
+        <div *ngIf="form.controls.asignatura.errors?.['required']">La asignatura es requerida</div>
+      </div>
+
+      <!--=========Aula============-->
+      <app-custom-input 
+        autocomplete="off" 
+        icon="home-outline" 
+        [control]="form.controls.aula" 
+        type="text"
+        label="Aula"
+      ></app-custom-input>
+
+      <div class="validators" *ngIf="form.controls.aula.errors && form.controls.aula.touched">
+        <div *ngIf="form.controls.aula.errors?.['required']">El aula es requerida</div>
+      </div>
+
+      <!--=========Profesor (oculto, se obtiene de localStorage)============-->
+      <!-- Este campo está oculto, ya que el valor se toma automáticamente -->
+      <input type="hidden" [value]="profesorUid" formControlName="profesor">
+
+      <ion-button class="ion-padding" color="tertiary" expand="block" mode="ios" class="submit" type="submit" [disabled]="form.invalid">
+        Crear Sección
+        <ion-icon slot="end" name="create-outline"></ion-icon>
+      </ion-button>
+
+    </form>
+
+  </div>
+
+</ion-content>

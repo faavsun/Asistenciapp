@@ -1,0 +1,47 @@
+<app-encabezado titulo="Crear Asignatura"></app-encabezado>
+<ion-content class="ion-padding">
+  <ion-text color="tertiary" class="ion-text-center">
+    <h1>Crear Asignatura</h1>
+  </ion-text>
+
+  <div class="d-flex-center">
+
+    <form [formGroup]="form" class="auth-form" (ngSubmit)="submit()" (keypress.enter)="submit()">
+
+      <!--=========Nombre de la asignatura============-->
+      <app-custom-input 
+        autocomplete="off" 
+        icon="school-outline" 
+        [control]="form.controls.nombre" 
+        type="text"
+        label="Nombre de la Asignatura"
+      ></app-custom-input>
+
+      <div class="validators" *ngIf="form.controls.nombre.errors && form.controls.nombre.touched">
+        <div *ngIf="form.controls.nombre.errors?.['required']">El nombre de la asignatura es requerido</div>
+      </div>
+
+      <!--=========Cantidad máxima de estudiantes============-->
+      <app-custom-input 
+        autocomplete="off" 
+        icon="people-outline" 
+        [control]="form.controls.maxEstudiantes" 
+        type="number"
+        label="Cantidad máxima de estudiantes"
+      ></app-custom-input>
+
+      <div class="validators" *ngIf="form.controls.maxEstudiantes.errors && form.controls.maxEstudiantes.touched">
+        <div *ngIf="form.controls.maxEstudiantes.errors?.['required']">La cantidad máxima de estudiantes es requerida</div>
+        <div *ngIf="form.controls.maxEstudiantes.errors?.['min']">Debe ser al menos 1 estudiante</div>
+      </div>
+
+      <ion-button class="ion-padding" color="tertiary" expand="block" mode="ios" class="submit" type="submit" [disabled]="form.invalid">
+        Crear Asignatura
+        <ion-icon slot="end" name="create-outline"></ion-icon>
+      </ion-button>
+
+    </form>
+
+  </div>
+
+</ion-content>

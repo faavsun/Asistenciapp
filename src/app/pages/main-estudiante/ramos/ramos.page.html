@@ -11,8 +11,7 @@
   <ion-item *ngFor="let asistencia of asistenciaData">
     <ion-label>
       <h1>Asistencia</h1>
-      <p>Porcentaje: {{ (asistencia.total_asistencia / seccion?.total_clases)*100}}%</p> <!-- Porcentaje de asistencia -->
-      <p>N° de clases: {{ asistencia.total_asistencia }}/ {{ seccion?.total_clases }}</p> <!-- Número de clases -->
+      <p>N° de clases: {{ asistencia.total_asistencia }}</p><!--/ {{ seccion?.total_clases }}</p>  Número de clases -->
     </ion-label>
   </ion-item>
 

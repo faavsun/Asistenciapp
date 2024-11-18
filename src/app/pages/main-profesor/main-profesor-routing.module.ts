@@ -33,6 +33,14 @@ const routes: Routes = [
         loadChildren: () => import('../../pages/main-profesor/cambiar-clave-profesor/cambiar-clave-profesor.module').then( m => m.CambiarClaveProfesorPageModule)
       },
       {
+        path: 'crear-asignatura',
+        loadChildren: () => import('../../pages/main-profesor/crear-asignatura/crear-asignatura.module').then( m => m.CrearAsignaturaPageModule)
+      },
+      {
+        path: 'crear-seccion',
+        loadChildren: () => import('../../pages/main-profesor/crear-seccion/crear-seccion.module').then( m => m.CrearSeccionPageModule)
+      },
+      {
         path: '**',
         redirectTo: 'home-profesor', // O cualquier otra página que desees
         pathMatch: 'full'
@@ -41,7 +49,13 @@ const routes: Routes = [
 
 
     ]
+  },
+  {
+    path: 'crear-seccion',
+    loadChildren: () => import('./crear-seccion/crear-seccion.module').then( m => m.CrearSeccionPageModule)
   }
+
+
 ];
 
 @NgModule({

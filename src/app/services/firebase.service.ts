@@ -3,7 +3,7 @@ import {AngularFireAuth} from '@angular/fire/compat/auth'
 import {getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile,sendPasswordResetEmail,updatePassword} from 'firebase/auth'
 import { User } from '../models/user.model';
 import {AngularFirestore} from '@angular/fire/compat/firestore';
-import {getFirestore,setDoc,doc, getDoc, collectionData, getDocs,collection,Firestore} from '@angular/fire/firestore';
+import {getFirestore,setDoc,doc, getDoc, collectionData, getDocs,collection,Firestore, addDoc} from '@angular/fire/firestore';
 import { UtilsService } from './utils.service';
 import { Seccion } from '../models/seccion.model';
 import { Asignatura } from '../models/asignatura.model';
@@ -135,6 +135,69 @@ async getDocument(path: string){
 
 }
 
+
+
+//=======================================================//
+
+  // Método para crear una nueva asignatura
+  async createAsignatura(asignatura: Asignatura) {
+    try {
+      const asignaturasRef = this.firestore.collection('asignatura');
+      const docRef = await asignaturasRef.add(asignatura);  // Usamos .add() para agregar el documento
+      return docRef;  // Retorna el DocumentReference con el id del nuevo documento
+    } catch (error) {
+      console.error('Error al crear la asignatura: ', error);
+      throw error;
+    }
+  }
+
+  // Método para actualizar una asignatura con su UID (si ya tiene un id)
+  async updateAsignatura(asignatura: Asignatura) {
+    try {
+      if (!asignatura.uid) {
+        throw new Error('UID de asignatura es necesario para la actualización');
+      }
+
+      const asignaturaRef = this.firestore.collection('asignatura').doc(asignatura.uid);
+      await asignaturaRef.set(asignatura);  // Usamos .set() para actualizar el documento
+    } catch (error) {
+      console.error('Error al actualizar la asignatura: ', error);
+      throw error;
+    }
+  }
+
+  // Método para crear una sección
+  async createSeccion(seccion: Seccion) {
+    try {
+      // Agregar la nueva sección a la colección "secciones"
+      const docRef = await this.firestore.collection('seccion').add(seccion);
+      return docRef; // Retornar el DocumentReference
+    } catch (error) {
+      console.error('Error al crear la sección:', error);
+      throw new Error('Error al crear la sección');
+    }
+  }
+
+
+//===============================================================//
+
+// En el servicio FirebaseService (firebase.service.ts)
+async getAsignaturasPorProfesor(profesorUid: string): Promise<Asignatura[]> {
+  try {
+    const asignaturasSnapshot = await this.firestore.collection<Asignatura>('asignatura', ref => 
+      ref.where('uid_profesor', '==', profesorUid)).get().toPromise();
+    return asignaturasSnapshot.docs.map(doc => doc.data());
+  } catch (error) {
+    console.error('Error al obtener asignaturas para el profesor:', error);
+    throw error;
+  }
+}
+
+
+
+//================================================================//
+
+
 //================================ Yo datos de asig
 
   // Nuevo método para obtener todos los documentos de una colección
@@ -147,16 +210,53 @@ async getDocument(path: string){
   }
 
 
-// Método para obtener todos los documentos de la colección 'seccion'
-async getAllSecciones(): Promise<{ id: string; nombre: string; asignatura: string; profesor: string }[]> {
-  const snapshot = await this.firestore.collection('seccion').get().toPromise();
-  const secciones = snapshot.docs.map(doc => {
-    const data = doc.data() as { nombre: string; asignatura: string; profesor: string };
-    return { id: doc.id, ...data };
-  });
-  console.log("Secciones obtenidas de Firestore:", secciones); // Verifica si se obtienen datos
-  return secciones;
+
+// Método para obtener todos los documentos de la colección 'secciones'
+async getAllSecciones(): Promise<Seccion[]> {
+  try {
+    const snapshot = await this.firestore.collection('seccion').get().toPromise();
+    
+    // Verificar si los documentos están vacíos
+    if (snapshot.empty) {
+      console.log('No se encontraron secciones en Firestore.');
+      return [];
+    }
+
+    // Mapea los datos a la estructura de tipo 'Seccion'
+    const secciones = snapshot.docs.map(doc => {
+      const data = doc.data() as { nombre: string; asignatura: string; profesor: string; aula?: string; total_clases?: number };
+      return {
+        uid: doc.id,               // El 'id' de Firestore se convierte en el 'uid' de la sección
+        nombre: data.nombre || '',  // Si no tiene nombre, asigna un string vacío
+        asignatura: data.asignatura || '',  // Si no tiene asignatura, asigna un string vacío
+        profesor: data.profesor || '',  // Si no tiene profesor, asigna un string vacío
+        aula: data.aula || '',  // Si no tiene aula, asigna un string vacío
+        total_clases: data.total_clases || 0  // Si no tiene total_clases, asigna 0
+      };
+    });
+    console.log("Secciones obtenidas de Firestore:", secciones); // Verifica si se obtienen datos
+    return secciones;
+  } catch (error) {
+    console.error('Error al obtener las secciones:', error);
+    throw error;
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // Método para obtener los datos del profesor por su uid
@@ -215,7 +315,7 @@ async getAsignaturaPorId(uid: string): Promise<Asignatura | null> {
   
   if (docSnap.exists()) {
     const data = docSnap.data();
-    return { uid: docSnap.id, nombre: data['nombre'] }; // Asegúrate de que 'nombre' sea el campo correcto
+    return { uid: docSnap.id, uid_profesor: data['uid_profesor'],nombre: data['nombre'], maxEstudiantes: data['maxEstudiantes'] }; // Asegúrate de que 'nombre' sea el campo correcto
   } else {
     console.error('Asignatura no encontrada:', uid);
     return null;
