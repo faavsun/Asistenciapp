@@ -22,7 +22,7 @@ export class HomePage implements OnInit {
   constructor(private router: Router, private appComponent: AppComponent, private menuCtrl: MenuController) { }
 
   ngOnInit() {
-    //this.menuCtrl.enable(true); // Desactivar el menú en esta vista
+    this.menuCtrl.enable(true); // Desactivar el menú en esta vista
     this.loadAsignaturas();
   }
 

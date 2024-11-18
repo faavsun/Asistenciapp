@@ -1,5 +1,6 @@
 export interface AlumnoSeccion {
     uid: string,
-    estudiante: string,
-    seccion: string;
+    alumno: string,
+    seccion: string,
+    asignatura: string;
   }

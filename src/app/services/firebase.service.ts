@@ -177,6 +177,27 @@ async getDocument(path: string){
       throw new Error('Error al crear la sección');
     }
   }
+  
+
+  // Método para actualizar una asignatura con su UID (si ya tiene un id)
+  async updateSeccion(seccion: Seccion) {
+    try {
+      if (!seccion.uid) {
+        throw new Error('UID de seccion es necesario para la actualización');
+      }
+
+      const seccionRef = this.firestore.collection('seccion').doc(seccion.uid);
+      await seccionRef.set(seccion);  // Usamos .set() para actualizar el documento
+    } catch (error) {
+      console.error('Error al actualizar la seccion: ', error);
+      throw error;
+    }
+  }
+
+
+
+
+
 
 
 //===============================================================//
@@ -333,7 +354,7 @@ async getAsignaturaPorId(uid: string): Promise<Asignatura | null> {
 async getAsignaturasDeEstudiante(uidEstudiante: string): Promise<{ asignatura: Asignatura, seccionId: string }[]> {
   // Obtener las secciones asociadas al estudiante desde la colección 'alumnoseccion'
   const alumnoSeccionesSnapshot = await this.firestore.collection<AlumnoSeccion>('alumnoseccion', ref => 
-    ref.where('estudiante', '==', uidEstudiante)).get().toPromise();
+    ref.where('alumno', '==', uidEstudiante)).get().toPromise();
   
   console.log('Snapshot de alumnoSecciones:', alumnoSeccionesSnapshot.docs.map(doc => doc.data()));
   const alumnoSecciones = alumnoSeccionesSnapshot.docs.map(doc => ({
@@ -492,7 +513,7 @@ getAlumnosPorSeccion(seccionId: string): Promise<AlumnoSeccion[]> {
 getEstudiantesBySeccion(seccionId: string): Observable<User[]> {
   return this.firestore.collection<AlumnoSeccion>('alumnoseccion', ref => ref.where('seccion', '==', seccionId)).snapshotChanges().pipe(
     switchMap(actions => {
-      const uids = actions.map(a => a.payload.doc.data().estudiante);
+      const uids = actions.map(a => a.payload.doc.data().alumno);
       console.log('UIDs obtenidos:', uids); // Verifica los UIDs
 
       // Obtener los usuarios (estudiantes)
@@ -654,6 +675,103 @@ async crearAsistencia(asistencia: any) {
   } catch (error) {
     console.error('Error al crear el documento de asistencia:', error);
     throw error;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Método para obtener las asignaturas disponibles
+getAsignaturas(): Observable<Asignatura[]> {
+  return this.firestore.collection<Asignatura>('asignatura').valueChanges();
+}
+
+// Método para obtener las secciones por asignatura
+getSeccionesPorAsignatura(asignaturaUid: string) {
+  return this.firestore.collection('seccion', ref => ref.where('asignatura', '==', asignaturaUid))
+    .snapshotChanges() // Esto te da acceso a los cambios de los documentos
+    .pipe(
+      map(actions => actions.map(a => {
+        const data = a.payload.doc.data() as Seccion;
+        const id = a.payload.doc.id;  // Aquí se obtiene el UID del documento (ID)
+        return { id, ...data }; // Añadimos el ID al objeto de la sección
+      }))
+    );
+}
+
+
+// Método para inscribir al estudiante
+inscribirEstudiante(alumnoUid: string, seccionUid: string,asignaturaUid: string ): Promise<void> {
+  // Validar que los valores no sean null o undefined
+  if (!alumnoUid || !seccionUid || !asignaturaUid) {
+    return Promise.reject('Faltan datos para realizar la inscripción. Verifica que los valores sean correctos.');
+  }  
+  
+  const inscripcionRef = this.firestore.collection('alumnoseccion').doc(); // Genera un nuevo documento
+  return inscripcionRef.set({
+    alumno: alumnoUid,
+    seccion: seccionUid,
+    asignatura: asignaturaUid,
+  });
+}
+
+
+
+// Método que verifica si el alumno ya está inscrito en una sección de la misma asignatura
+async verificarInscripcionExistente(alumnoUid: string, asignaturaUid: string): Promise<boolean> {
+  try {
+    // Aquí consultamos si el alumno está inscrito en alguna sección de la asignatura
+    const inscripcionesRef = this.firestore.collection('alumnoseccion', ref => ref.where('alumno', '==', alumnoUid).where('asignatura', '==', asignaturaUid));
+    const snapshot = await inscripcionesRef.get().toPromise();
+    return snapshot.empty; // Si no hay inscripciones, retorna true (puede inscribirse)
+  } catch (error) {
+    console.error('Error al verificar la inscripción:', error);
+    throw new Error('Error al verificar la inscripción');
   }
 }
 

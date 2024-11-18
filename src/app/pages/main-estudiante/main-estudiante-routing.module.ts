@@ -28,6 +28,10 @@ const routes: Routes = [
       {
         path: 'cambiar-clave',
         loadChildren: () => import('../../pages/main-estudiante/cambiar-clave/cambiar-clave.module').then( m => m.CambiarClavePageModule)
+      }, 
+      {
+        path: 'inscribir-seccion',
+        loadChildren: () => import('../../pages/main-estudiante/inscribir-seccion/inscribir-seccion.module').then( m => m.InscribirSeccionPageModule)
       },
       {
         path: '**',
@@ -38,6 +42,7 @@ const routes: Routes = [
     
     ]
   }
+
 ];
 
 @NgModule({

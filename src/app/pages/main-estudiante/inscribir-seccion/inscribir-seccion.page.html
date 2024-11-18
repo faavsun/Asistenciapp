@@ -1,0 +1,50 @@
+<app-encabezado titulo="Inscripción a Sección"></app-encabezado>
+
+<ion-content class="ion-padding">
+  <ion-text color="tertiary" class="ion-text-center">
+    <h1>Inscripción a Sección</h1>
+  </ion-text>
+
+  <div class="d-flex-center">
+
+    <form [formGroup]="form" class="auth-form" (ngSubmit)="submit()" (keypress.enter)="submit()">
+
+      <!--=========Asignatura (Selector)============-->
+      <ion-item>
+        <ion-label position="floating">Asignatura</ion-label>
+        <ion-select [formControl]="form.controls.asignatura" (ionChange)="onAsignaturaChange($event)" placeholder="Seleccionar asignatura">
+          <ion-select-option *ngFor="let asignatura of asignaturas" [value]="asignatura.uid">
+            {{ asignatura.nombre }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <div class="validators" *ngIf="form.controls.asignatura.errors && form.controls.asignatura.touched">
+        <div *ngIf="form.controls.asignatura.errors?.['required']">La asignatura es requerida</div>
+      </div>
+
+      <!--=========Sección (Selector) - Aparece después de seleccionar la asignatura============-->
+      <ion-item *ngIf="secciones.length > 0">
+        <ion-label position="floating">Sección</ion-label>
+        <ion-select [formControl]="form.controls.seccion" placeholder="Seleccionar sección">
+          <ion-select-option *ngFor="let seccion of secciones" [value]="seccion.uid">
+            {{ seccion.nombre }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <div class="validators" *ngIf="form.controls.seccion.errors && form.controls.seccion.touched">
+        <div *ngIf="form.controls.seccion.errors?.['required']">La sección es requerida</div>
+      </div>
+
+
+      <ion-button class="ion-padding" color="tertiary" expand="block" mode="ios" class="submit" type="submit" [disabled]="form.invalid">
+        Inscribirse
+        <ion-icon slot="end" name="create-outline"></ion-icon>
+      </ion-button>
+
+    </form>
+
+  </div>
+
+</ion-content>

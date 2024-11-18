@@ -49,13 +49,7 @@ const routes: Routes = [
 
 
     ]
-  },
-  {
-    path: 'crear-seccion',
-    loadChildren: () => import('./crear-seccion/crear-seccion.module').then( m => m.CrearSeccionPageModule)
   }
-
-
 ];
 
 @NgModule({

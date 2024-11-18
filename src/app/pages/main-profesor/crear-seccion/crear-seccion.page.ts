@@ -85,12 +85,12 @@ export class CrearSeccionPage implements OnInit {
         // Llamar al servicio para crear la sección en Firebase
         const docRef = await this.firebaseSvc.createSeccion(seccion);
         
-        // Asignar el UID generado por Firebase al objeto Sección
-        const seccionConUid: Seccion = {
-          ...seccion, // Mantener los demás valores
-          uid: docRef.id, // Asignar el ID del documento como uid
-        };
+        seccion.uid = docRef.id;
 
+        await this.firebaseSvc.updateSeccion(seccion);
+
+        // Restablecer el formulario
+        this.form.reset();
         // Aquí puedes usar el objeto seccionConUid que ya tiene el UID generado
         // Redirigir o hacer alguna otra acción si es necesario
 
