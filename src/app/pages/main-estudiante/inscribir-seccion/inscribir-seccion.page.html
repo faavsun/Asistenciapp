@@ -12,7 +12,7 @@
       <!--=========Asignatura (Selector)============-->
       <ion-item>
         <ion-label position="floating">Asignatura</ion-label>
-        <ion-select [formControl]="form.controls.asignatura" (ionChange)="onAsignaturaChange($event)" placeholder="Seleccionar asignatura">
+        <ion-select [formControl]="form.controls.asignatura" (ionChange)="onAsignaturaChange($event)">
           <ion-select-option *ngFor="let asignatura of asignaturas" [value]="asignatura.uid">
             {{ asignatura.nombre }}
           </ion-select-option>
@@ -26,7 +26,7 @@
       <!--=========Sección (Selector) - Aparece después de seleccionar la asignatura============-->
       <ion-item *ngIf="secciones.length > 0">
         <ion-label position="floating">Sección</ion-label>
-        <ion-select [formControl]="form.controls.seccion" placeholder="Seleccionar sección">
+        <ion-select [formControl]="form.controls.seccion">
           <ion-select-option *ngFor="let seccion of secciones" [value]="seccion.uid">
             {{ seccion.nombre }}
           </ion-select-option>
@@ -37,6 +37,7 @@
         <div *ngIf="form.controls.seccion.errors?.['required']">La sección es requerida</div>
       </div>
 
+      <div class="ion-padding"></div>
 
       <ion-button class="ion-padding" color="tertiary" expand="block" mode="ios" class="submit" type="submit" [disabled]="form.invalid">
         Inscribirse

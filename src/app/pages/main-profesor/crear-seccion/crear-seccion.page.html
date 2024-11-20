@@ -7,7 +7,20 @@
   <div class="d-flex-center">
 
     <form [formGroup]="form" class="auth-form" (ngSubmit)="submit()" (keypress.enter)="submit()">
+      
+      <!--=========Asignatura (Selector)============-->
+      <ion-item>
+        <ion-label position="floating">Asignatura</ion-label>
+        <ion-select [formControl]="form.controls.asignatura">
+          <ion-select-option *ngFor="let asignatura of asignaturas" [value]="asignatura.uid">
+            {{ asignatura.nombre }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
 
+      <div class="validators" *ngIf="form.controls.asignatura.errors && form.controls.asignatura.touched">
+        <div *ngIf="form.controls.asignatura.errors?.['required']">La asignatura es requerida</div>
+      </div>
       <!--=========Nombre de la Sección============-->
       <app-custom-input 
         autocomplete="off" 
@@ -19,20 +32,6 @@
 
       <div class="validators" *ngIf="form.controls.nombre.errors && form.controls.nombre.touched">
         <div *ngIf="form.controls.nombre.errors?.['required']">El nombre de la sección es requerido</div>
-      </div>
-
-      <!--=========Asignatura (Selector)============-->
-      <ion-item>
-        <ion-label position="floating">Asignatura</ion-label>
-        <ion-select [formControl]="form.controls.asignatura" placeholder="Seleccionar asignatura">
-          <ion-select-option *ngFor="let asignatura of asignaturas" [value]="asignatura.uid">
-            {{ asignatura.nombre }}
-          </ion-select-option>
-        </ion-select>
-      </ion-item>
-
-      <div class="validators" *ngIf="form.controls.asignatura.errors && form.controls.asignatura.touched">
-        <div *ngIf="form.controls.asignatura.errors?.['required']">La asignatura es requerida</div>
       </div>
 
       <!--=========Aula============-->
@@ -51,6 +50,10 @@
       <!--=========Profesor (oculto, se obtiene de localStorage)============-->
       <!-- Este campo está oculto, ya que el valor se toma automáticamente -->
       <input type="hidden" [value]="profesorUid" formControlName="profesor">
+
+
+      <div class="ion-padding"></div>
+
 
       <ion-button class="ion-padding" color="tertiary" expand="block" mode="ios" class="submit" type="submit" [disabled]="form.invalid">
         Crear Sección

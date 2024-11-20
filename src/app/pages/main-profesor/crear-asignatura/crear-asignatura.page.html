@@ -35,6 +35,8 @@
         <div *ngIf="form.controls.maxEstudiantes.errors?.['min']">Debe ser al menos 1 estudiante</div>
       </div>
 
+      <div class="ion-padding"></div>
+
       <ion-button class="ion-padding" color="tertiary" expand="block" mode="ios" class="submit" type="submit" [disabled]="form.invalid">
         Crear Asignatura
         <ion-icon slot="end" name="create-outline"></ion-icon>
