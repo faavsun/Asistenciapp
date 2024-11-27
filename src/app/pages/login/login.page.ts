@@ -1,6 +1,7 @@
 
 import { Component } from '@angular/core';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { FirebaseService } from 'src/app/services/firebase.service';
 
 @Component({
   selector: 'app-login',
@@ -8,22 +9,30 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage {
-  constructor(private localStorageService: LocalStorageService) {}
+  constructor(
+    private localStorageService: LocalStorageService,
+    private firebaseService: FirebaseService
+  ) {}
 
-  login(user: any): void {
-    // Simulando un login exitoso
-    const userData = { id: user.id, name: user.name, token: 'fake-token' };
-    this.localStorageService.setItem('user', userData);
-    console.log('Usuario guardado en localStorage:', userData);
-  }
-
-  getUserData(): void {
-    const user = this.localStorageService.getItem('user');
-    console.log('Datos del usuario desde localStorage:', user);
+  async login(user: any): Promise<void> {
+    try {
+      const userData = await this.firebaseService.login(user);
+      this.localStorageService.setItem('user', userData);
+      console.log('Usuario autenticado y guardado:', userData);
+    } catch (error) {
+      console.error('Error en el login con Firebase:', error);
+      const fallbackUser = this.localStorageService.getItem('user');
+      if (fallbackUser) {
+        console.log('Cargando usuario desde localStorage como respaldo:', fallbackUser);
+      } else {
+        console.error('No hay datos de respaldo en localStorage.');
+      }
+    }
   }
 
   logout(): void {
+    this.firebaseService.logout();
     this.localStorageService.removeItem('user');
-    console.log('Usuario eliminado de localStorage');
+    console.log('Sesión cerrada y datos locales eliminados.');
   }
 }
