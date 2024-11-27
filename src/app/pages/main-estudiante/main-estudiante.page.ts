@@ -1,41 +1,25 @@
-import { Component,inject, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { UtilsService } from 'src/app/services/utils.service';
-import { FirebaseService } from 'src/app/services/firebase.service';
-import { MenuController } from '@ionic/angular';
+
+import { Component } from '@angular/core';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 @Component({
   selector: 'app-main-estudiante',
   templateUrl: './main-estudiante.page.html',
   styleUrls: ['./main-estudiante.page.scss'],
 })
-export class MainEstudiantePage implements OnInit {
+export class MainEstudiantePage {
+  asistenciaHistorial: any[] = [];
 
-  pages = [
-    {title: 'Inicio', url: '/main-estudiante/home', icon: 'home-outline'},
-    {title: 'Perfil', url: '/main-estudiante/perfil', icon: 'person-outline'},
-    {title: 'Inscribir', url: '/main-estudiante/inscribir-seccion', icon: 'person-outline'},
-  ]
+  constructor(private localStorageService: LocalStorageService) {}
 
-  router = inject(Router);
-  firebaseSvc = inject(FirebaseService)
-  utilsSvc = inject(UtilsService)
-  currentPath: string = '';
-
-  constructor(private menuCtrl: MenuController){}
-
-  ngOnInit() {
-   // this.menuCtrl.enable(true); // Desactivar el menú en esta vista
-    this.router.events.subscribe((event: any) =>{
-      if (event?.url) {
-        this.currentPath = event.url;
-      }
-    })
+  guardarAsistencia(asistencia: any): void {
+    this.asistenciaHistorial.push(asistencia);
+    this.localStorageService.setItem('historialAsistencias', this.asistenciaHistorial);
+    console.log('Historial de asistencias actualizado:', this.asistenciaHistorial);
   }
 
-  //========== Cerrar sesión===============
-signOut(){
-  this.firebaseSvc.signOut();
- 
-}
+  cargarHistorial(): void {
+    this.asistenciaHistorial = this.localStorageService.getItem('historialAsistencias') || [];
+    console.log('Historial de asistencias desde localStorage:', this.asistenciaHistorial);
+  }
 }
