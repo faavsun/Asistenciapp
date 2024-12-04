@@ -74,6 +74,10 @@
         </ion-segment>
       </ion-item>
 
+      <div class="validators" *ngIf="form.controls.tipo.errors && form.controls.tipo.touched">
+        <div *ngIf="form.controls.tipo.errors?.['required']">Debe seleccionar un tipo de usuario</div>
+      </div>
+
       <!--=========Aceptación de términos============-->
       <ion-item class="ion-padding">
         <ion-checkbox formControlName="aceptaTerminos">Acepta los términos y condiciones</ion-checkbox>

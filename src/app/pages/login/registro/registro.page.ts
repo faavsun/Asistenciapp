@@ -45,7 +45,7 @@ export class RegistroPage implements OnInit {
     password: new FormControl('', [Validators.required]),
     name: new FormControl('', [Validators.required, Validators.minLength(4)]),
     lastname: new FormControl('', [Validators.required, Validators.minLength(4)]),
-    tipo: new FormControl('estudiante'),  // 'tipo' es "estudiante" por defecto
+    tipo: new FormControl('',[Validators.required]),  // 'tipo' es "estudiante" por defecto
     aceptaTerminos: new FormControl(false, [Validators.requiredTrue])  // Requerido en true
   });
 

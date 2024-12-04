@@ -11,6 +11,7 @@ import { AlumnoSeccion } from '../models/alumnoseccion.model';
 import { Observable, switchMap, forkJoin, combineLatest, map } from 'rxjs';
 import { Asistencia } from '../models/asistencia.model';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { NavController } from '@ionic/angular';
 
 
 @Injectable({
@@ -22,6 +23,7 @@ export class FirebaseService {
   firestore = inject(AngularFirestore);
   utilsSvc = inject(UtilsService);
   localStorageSvc = inject(LocalStorageService);
+  navCtrl =  inject(NavController);
 
  asignaturas: { id: string; nombre: string; profesor: string }[] = [];
   seccionesPorAsignatura: { [key: string]: any[] } = {}; // Cambia el tipo según tu necesidad
@@ -106,7 +108,7 @@ signOut() {
   signOut(auth).then(() => {
     this.resetUserData(); // Resetea los datos del usuario del localStorage
     const scannedUIDs = localStorage.getItem('scannedUIDs');
-    this.utilsSvc.routerLink('/login'); // Redirige al login
+    this.navCtrl.navigateRoot('/login');
     this.localStorageSvc.clear();
     if (scannedUIDs) {
       localStorage.setItem('scannedUIDs', scannedUIDs);
