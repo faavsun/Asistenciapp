@@ -31,6 +31,7 @@ export class MarcarPage implements OnInit {
   asignatura: Asignatura;
   seccion: Seccion;
   nombre: string;
+  alumnoUid: string = ''; // Almacenaremos el UID del alumno aquí
 
   constructor(
     private alertController: AlertController,
@@ -47,6 +48,15 @@ export class MarcarPage implements OnInit {
         this.loadSeccionAndAsignatura(seccionId);
       }
     });
+    // Obtener el objeto completo del usuario desde localStorage
+    const userData = localStorage.getItem('user');
+
+    if (userData) {
+      const user = JSON.parse(userData);
+      this.alumnoUid = user.uid; // Guardar UID en la propiedad del componente
+    }
+
+
   }
 
   async loadSeccionAndAsignatura(seccionId: string) {
@@ -409,7 +419,7 @@ export class MarcarPage implements OnInit {
 async registerAttendance(uidFromQR: string) {
   try {
     const isOnline = await this.utilsSvc.checkInternetConnection(); // Verificar si hay conexión
-    const estudianteId = localStorage.getItem('userUid');
+    const estudianteId = this.alumnoUid;
 
     if (isOnline) {
       // Modo online: Registrar directamente en Firebase

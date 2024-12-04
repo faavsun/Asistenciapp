@@ -35,10 +35,13 @@ export class InscribirSeccionPage implements OnInit {
 
     // Cargar el listado de asignaturas disponibles
     this.loadAsignaturas();
+    // Obtener el objeto completo del usuario desde localStorage
+    const userData = localStorage.getItem('user');
 
-    // Obtener el UID del alumno desde localStorage
-    this.alumnoUid = localStorage.getItem('userUid') || '';
-    console.log(this.alumnoUid)
+    if (userData) {
+      const user = JSON.parse(userData);
+      this.alumnoUid = user.uid; // Guardar UID en la propiedad del componente
+    }
     // Asignar el UID del alumno al formulario (aunque no lo muestres)
     this.form.controls.alumno.setValue(this.alumnoUid);
   }
@@ -109,7 +112,7 @@ export class InscribirSeccionPage implements OnInit {
   
       const inscripcionData = this.form.value; // { asignatura, seccion, alumno }
       const asignaturaUid = inscripcionData.asignatura;
-      const alumnoUid = localStorage.getItem('userUid');
+      const alumnoUid = this.alumnoUid;
   
       try {
         // Verificar si el alumno ya está inscrito en otra sección de la misma asignatura

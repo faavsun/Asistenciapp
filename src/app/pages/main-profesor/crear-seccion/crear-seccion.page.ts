@@ -36,10 +36,17 @@ export class CrearSeccionPage implements OnInit {
     // Cargar el listado de asignaturas desde Firebase
     this.loadAsignaturas();
 
-    // Obtener el UID del profesor desde localStorage
-    this.profesorUid = localStorage.getItem('userUid') || '';
+    // Obtener el objeto completo del usuario desde localStorage
+    const userData = localStorage.getItem('user');
+
+    if (userData) {
+      const user = JSON.parse(userData);
+      this.profesorUid = user.uid; // Guardar UID en la propiedad del componente
+    }
+
     // Asignar el UID del profesor al formulario
     this.form.controls.profesor.setValue(this.profesorUid);
+
   }
 
   // Función para cargar las asignaturas disponibles
@@ -84,7 +91,7 @@ export class CrearSeccionPage implements OnInit {
       try {
         // Llamar al servicio para crear la sección en Firebase
         const docRef = await this.firebaseSvc.createSeccion(seccion);
-        
+
         seccion.uid = docRef.id;
 
         await this.firebaseSvc.updateSeccion(seccion);

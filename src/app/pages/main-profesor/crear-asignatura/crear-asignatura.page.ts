@@ -50,9 +50,20 @@ export class CrearAsignaturaPage implements OnInit {
         return;
       }
 
+      // Obtener el objeto del usuario desde localStorage
+      const userData = localStorage.getItem('user');
+
+      // Asegurarse de que existe y extraer el UID
+      let uidProfesor = '';
+      if (userData) {
+        const user = JSON.parse(userData); // Convierte el string JSON en un objeto
+        uidProfesor = user.uid; // Obtiene el UID del profesor
+      }
+
+
       // Crear el objeto de asignatura sin el UID
       const asignatura: Asignatura = {
-        uid_profesor: localStorage.getItem('userUid'),  // El UID del profesor desde localStorage
+        uid_profesor: uidProfesor,  // El UID del profesor desde localStorage
         nombre: asignaturaData.nombre,
         maxEstudiantes: maxEstudiantes // Valor numérico para maxEstudiantes
       };

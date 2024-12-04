@@ -17,6 +17,8 @@ export class HomePage implements OnInit {
   utilsSvc = inject(UtilsService);
   localStorageSvc = inject(LocalStorageService);
   asignaturas: { asignatura: Asignatura; seccionId: string }[] = []; // Array modificado
+  alumnoUid: string = ''; // Almacenaremos el UID del alumno aquí
+
 
   constructor(
     private router: Router,
@@ -31,6 +33,16 @@ export class HomePage implements OnInit {
     this.loadAsignaturas();
     // Reinicia el menú después de cargar datos
     this.resetMenu();
+
+    // Obtener el objeto completo del usuario desde localStorage
+    const userData = localStorage.getItem('user');
+
+    if (userData) {
+      const user = JSON.parse(userData);
+      this.alumnoUid = user.uid; // Guardar UID en la propiedad del componente
+    }
+
+
   }
 
 
@@ -53,7 +65,7 @@ export class HomePage implements OnInit {
       const hasInternet = await this.utilsSvc.checkInternetConnection();
       if (hasInternet) {
         console.log('Conexión a internet detectada. Cargando desde Firebase...');
-        const uidEstudiante = this.localStorageSvc.get('userUid'); // UID del estudiante
+        const uidEstudiante = this.alumnoUid; // UID del estudiante
         console.log('UID Estudiante:', uidEstudiante);
 
         if (uidEstudiante) {
