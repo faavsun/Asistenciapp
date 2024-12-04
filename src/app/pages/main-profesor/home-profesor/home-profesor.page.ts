@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { IonRouterOutlet,MenuController } from '@ionic/angular';
+import { IonRouterOutlet, MenuController } from '@ionic/angular';
 import { AppComponent } from 'src/app/app.component';
 import { UtilsService } from 'src/app/services/utils.service';
 import { FirebaseService } from 'src/app/services/firebase.service';
@@ -28,11 +28,11 @@ export class HomeProfesorPage implements OnInit {
     private appComponent: AppComponent,
     private menuCtrl: MenuController,
     private routerOutlet: IonRouterOutlet
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.routerOutlet.swipeGesture = false; // Desactivar gestos en este componente
-    
+
     const user = this.user();
     if (user && user.uid) {
       try {
@@ -51,7 +51,22 @@ export class HomeProfesorPage implements OnInit {
       this.firebaseSvc.resetUserData();
     }
     this.menuCtrl.enable(true, 'menu-profesor');
+    // Reinicia el menú después de cargar datos
+    this.resetMenu();
   }
+
+
+
+  // Método para reiniciar el menú
+  resetMenu() {
+    this.menuCtrl.enable(false, 'menu-profesor'); // Desactiva el menú
+    setTimeout(() => {
+      this.menuCtrl.enable(true, 'menu-profesor'); // Actívalo nuevamente
+    }, 100); // Tiempo de espera breve para asegurarse de que se reinicia correctamente
+  }
+
+
+
 
   async cargarDatosDesdeFirebase(profesorUid: string) {
     const loading = await this.utilsSvc.loading();

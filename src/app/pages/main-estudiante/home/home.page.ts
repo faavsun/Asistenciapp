@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { IonRouterOutlet,MenuController } from '@ionic/angular';
+import { IonRouterOutlet, MenuController } from '@ionic/angular';
 import { AppComponent } from 'src/app/app.component';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -23,14 +23,27 @@ export class HomePage implements OnInit {
     private appComponent: AppComponent,
     private menuCtrl: MenuController,
     private routerOutlet: IonRouterOutlet
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.routerOutlet.swipeGesture = false; // Desactivar gestos en este componente
     this.menuCtrl.enable(true, 'menu-estudiante');
     this.loadAsignaturas();
-    
+    // Reinicia el menú después de cargar datos
+    this.resetMenu();
   }
+
+
+  // Método para reiniciar el menú
+  resetMenu() {
+    this.menuCtrl.enable(false, 'menu-estudiante'); // Desactiva el menú
+    setTimeout(() => {
+      this.menuCtrl.enable(true, 'menu-estudiante'); // Actívalo nuevamente
+    }, 100); // Espera un breve momento
+  }
+
+
+
 
   async loadAsignaturas() {
     const loading = await this.utilsSvc.loading();
