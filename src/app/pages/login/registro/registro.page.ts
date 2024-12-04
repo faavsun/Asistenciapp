@@ -55,7 +55,6 @@ export class RegistroPage implements OnInit {
   constructor(private menuCtrl: MenuController, private navCtrl: NavController) {}
 
   ngOnInit() {
-    this.menuCtrl.enable(false); // Desactivar el menú en esta vista
 
     // Monitorizar el campo tipo para aplicar la validación del correo cuando sea "profesor" o "estudiante"
     this.form.controls.tipo.valueChanges.subscribe(value => {

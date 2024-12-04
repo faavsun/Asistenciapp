@@ -23,7 +23,7 @@ export class CrearAsignaturaPage implements OnInit {
   constructor(private menuCtrl: MenuController) { }
 
   ngOnInit() {
-    this.menuCtrl.enable(true); // Desactivar el menú en esta vista
+    this.menuCtrl.enable(true, 'menu-profesor');
   }
 
   async submit() {

@@ -25,7 +25,6 @@ export class OlvidadaPage implements OnInit {
   constructor(private menuCtrl: MenuController) { }
 
   ngOnInit() {
-    this.menuCtrl.enable(false); // Desactivar el menú en esta vista
   }
 
 

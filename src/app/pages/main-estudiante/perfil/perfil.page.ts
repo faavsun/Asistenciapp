@@ -18,7 +18,7 @@ export class PerfilPage implements OnInit {
   constructor(private menuCtrl: MenuController){}
 
   ngOnInit() {
-    //this.menuCtrl.enable(true); // Desactivar el menú en esta vista
+    this.menuCtrl.enable(true, 'menu-estudiante');
   }
 
   user(): User{ 

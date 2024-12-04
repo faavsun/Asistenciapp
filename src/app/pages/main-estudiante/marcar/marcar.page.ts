@@ -40,6 +40,7 @@ export class MarcarPage implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.menuCtrl.enable(true, 'menu-estudiante');
     this.route.paramMap.subscribe(params => {
       const seccionId = params.get('seccionId');
       if (seccionId) {

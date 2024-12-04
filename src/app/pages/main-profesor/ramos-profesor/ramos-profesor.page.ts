@@ -31,6 +31,7 @@ export class RamosProfesorPage implements OnInit {
   constructor(private router: Router, private route: ActivatedRoute, private menuCtrl: MenuController) {}
 
   async ngOnInit() {
+    this.menuCtrl.enable(true, 'menu-profesor');
     this.seccionId = this.route.snapshot.paramMap.get('seccionId') || '';
     if (this.seccionId) {
       // Verificar conexión a internet

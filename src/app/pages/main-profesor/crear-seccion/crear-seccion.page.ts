@@ -31,7 +31,7 @@ export class CrearSeccionPage implements OnInit {
   constructor(private menuCtrl: MenuController) { }
 
   ngOnInit() {
-    this.menuCtrl.enable(true); // Desactivar el menú en esta vista
+    this.menuCtrl.enable(true, 'menu-profesor');
 
     // Cargar el listado de asignaturas desde Firebase
     this.loadAsignaturas();

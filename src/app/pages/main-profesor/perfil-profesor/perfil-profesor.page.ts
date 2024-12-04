@@ -20,7 +20,7 @@ export class PerfilProfesorPage implements OnInit {
 
 
   ngOnInit() {
-    //this.menuCtrl.enable(true); // Desactivar el menú en esta vista
+    this.menuCtrl.enable(true, 'menu-profesor');
   }
 
   user(): User{ 

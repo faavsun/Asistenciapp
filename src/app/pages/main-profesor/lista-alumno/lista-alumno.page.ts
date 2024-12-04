@@ -21,6 +21,7 @@ export class ListaAlumnoPage implements OnInit {
   constructor(private route: ActivatedRoute, private navCtrl: NavController, private menuCtrl: MenuController) {}
 
   ngOnInit() {
+    this.menuCtrl.enable(true, 'menu-profesor');
     this.seccionId = this.route.snapshot.paramMap.get('seccionId') || '';
     console.log('ID de sección a buscar:', this.seccionId);
 

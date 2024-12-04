@@ -30,6 +30,7 @@ export class RamosPage implements OnInit {
   ) {}
 
   async ngOnInit() {
+    this.menuCtrl.enable(true, 'menu-estudiante');
     this.seccionId = this.route.snapshot.paramMap.get('seccionId');
     console.log('ID de la sección:', this.seccionId);
 

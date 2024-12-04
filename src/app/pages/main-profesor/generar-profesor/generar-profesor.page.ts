@@ -186,6 +186,7 @@ export class GenerarProfesorPage implements OnInit {
   }
 
   ngOnInit() {
+    this.menuCtrl.enable(true, 'menu-profesor');
     this.seccionId = this.route.snapshot.paramMap.get('seccionId') || '';
     console.log('ID de sección a buscar:', this.seccionId);
     if (this.seccionId) {

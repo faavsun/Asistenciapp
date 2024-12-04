@@ -25,7 +25,6 @@ export class LoginPage implements OnInit {
   constructor(private menuCtrl: MenuController) {}
 
   ngOnInit() {
-    this.menuCtrl.enable(false); // Desactivar el menú en esta vista
 
     // Verificar si el usuario ya está autenticado mediante localStorage
     const isLoggedIn = this.localStorageSvc.get('isLoggedIn');

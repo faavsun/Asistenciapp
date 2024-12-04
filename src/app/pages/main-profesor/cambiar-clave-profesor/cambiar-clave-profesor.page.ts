@@ -26,6 +26,7 @@ export class CambiarClaveProfesorPage implements OnInit {
   }
 
   ngOnInit() {
+    this.menuCtrl.enable(true, 'menu-profesor');
     //this.menuCtrl.enable(true); // activar el menú en esta vista
   }
   async cambiarp() {

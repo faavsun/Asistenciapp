@@ -12,7 +12,6 @@ export class LanzamientoPage implements OnInit {
   constructor(private router: Router,private menuCtrl: MenuController,private routerOutlet: IonRouterOutlet) { }
 
   ngOnInit() {
-    this.menuCtrl.enable(false); // Desactivar el menú en esta vista
     this.menuCtrl.swipeGesture(false);
     this.routerOutlet.swipeGesture = false; // Desactivar gestos en este componente
   }

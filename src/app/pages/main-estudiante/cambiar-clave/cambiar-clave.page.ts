@@ -18,7 +18,7 @@ export class CambiarClavePage implements OnInit {
   constructor(private alertController: AlertController,private navCtrl: NavController,private menuCtrl: MenuController) { }
 
   ngOnInit() {
-    //this.menuCtrl.enable(true); // activar el menú en esta vista
+    this.menuCtrl.enable(true, 'menu-estudiante');
   }
   async cambiarp() {
     try {

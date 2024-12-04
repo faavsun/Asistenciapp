@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { UtilsService } from 'src/app/services/utils.service';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { MenuController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-main-profesor',
@@ -12,10 +13,10 @@ import { MenuController } from '@ionic/angular';
 export class MainProfesorPage implements OnInit {
 
   pages = [
-    {title: 'Inicio', url: '/main-profesor/home-profesor', icon: 'home-outline'},
-    {title: 'Perfil', url: '/main-profesor/perfil-profesor', icon: 'person-outline'},
-    {title: 'Crear asignatura', url: '/main-profesor/crear-asignatura', icon: 'create-outline'},
-    {title: 'Crear seccion', url: '/main-profesor/crear-seccion', icon: 'document-text-outline'},
+    { title: 'Inicio', url: '/main-profesor/home-profesor', icon: 'home-outline' },
+    { title: 'Perfil', url: '/main-profesor/perfil-profesor', icon: 'person-outline' },
+    { title: 'Crear asignatura', url: '/main-profesor/crear-asignatura', icon: 'create-outline' },
+    { title: 'Crear seccion', url: '/main-profesor/crear-seccion', icon: 'document-text-outline' },
   ]
 
   router = inject(Router);
@@ -23,11 +24,12 @@ export class MainProfesorPage implements OnInit {
   utilsSvc = inject(UtilsService)
   currentPath: string = '';
 
-  constructor(private menuCtrl: MenuController){}
+  constructor(private menuCtrl: MenuController, private alertController: AlertController) { }
 
   ngOnInit() {
-   // this.menuCtrl.enable(true); // Desactivar el menú en esta vista
-    this.router.events.subscribe((event: any) =>{
+    this.menuCtrl.enable(true, 'menu-profesor');
+    // this.menuCtrl.enable(true); // Desactivar el menú en esta vista
+    this.router.events.subscribe((event: any) => {
       if (event?.url) {
         this.currentPath = event.url;
       }
@@ -42,13 +44,35 @@ export class MainProfesorPage implements OnInit {
 
 
 
-  
+
 
   //========== Cerrar sesión===============
-signOut(){
-  this.firebaseSvc.signOut();
- 
+  async signOut() {
+    const alert = await this.alertController.create({
+      header: 'Cerrar sesión',
+      message: 'Al cerrar sesión, los datos locales se eliminarán y solo podrá acceder nuevamente con conexión a internet. ¿Desea continuar?',
+      backdropDismiss: false,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cierre de sesión cancelado');
+          },
+        },
+        {
+          text: 'Cerrar sesión',
+          role: 'confirm',
+          handler: () => {
+            // Llamamos al método signOut del servicio Firebase
+            this.firebaseSvc.signOut();
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
 }
 
 
-}

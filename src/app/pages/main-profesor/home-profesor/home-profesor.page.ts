@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { MenuController } from '@ionic/angular';
+import { IonRouterOutlet,MenuController } from '@ionic/angular';
 import { AppComponent } from 'src/app/app.component';
 import { UtilsService } from 'src/app/services/utils.service';
 import { FirebaseService } from 'src/app/services/firebase.service';
@@ -26,12 +26,14 @@ export class HomeProfesorPage implements OnInit {
   constructor(
     private router: Router,
     private appComponent: AppComponent,
-    private menuCtrl: MenuController
+    private menuCtrl: MenuController,
+    private routerOutlet: IonRouterOutlet
   ) {}
 
   async ngOnInit() {
+    this.routerOutlet.swipeGesture = false; // Desactivar gestos en este componente
+    
     const user = this.user();
-
     if (user && user.uid) {
       try {
         // Cargar datos desde localStorage si no hay conexión
@@ -48,6 +50,7 @@ export class HomeProfesorPage implements OnInit {
       console.error('El UID del profesor no está disponible.');
       this.firebaseSvc.resetUserData();
     }
+    this.menuCtrl.enable(true, 'menu-profesor');
   }
 
   async cargarDatosDesdeFirebase(profesorUid: string) {

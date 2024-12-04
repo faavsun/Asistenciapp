@@ -105,7 +105,9 @@ signOut() {
   const auth = getAuth(); // Obtener instancia de autenticación de Firebase
   signOut(auth).then(() => {
     this.resetUserData(); // Resetea los datos del usuario del localStorage
+    
     this.utilsSvc.routerLink('/login'); // Redirige al login
+    this.localStorageSvc.clear();
   }).catch((error) => {
     // Manejar errores, si es necesario
     console.error('Error al cerrar sesión:', error);
