@@ -18,61 +18,68 @@ export class AuthGuard implements CanActivate {
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
     return new Promise((resolve) => {
-      this.firebaseSvc.getAuth().onAuthStateChanged((auth) => {
-        if (auth) {
-          const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
+      const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
 
-          if (user) {
-            const path = route.url.map(segment => segment.path).join('/'); // Obtener el path completo
-            let redirectPath = ''; // Variable para almacenar la ruta de redirección
-            let isValidRoute = false;
+      // Si no hay usuario en localStorage, redirigir al login
+      if (!user) {
+        this.utilsSvc.routerLink('/login');
+        resolve(false);
+        return;
+      }
 
-            if (user.tipo === 'estudiante') {
-              const studentPages = [
-                'main-estudiante',
-                'main-estudiante/home',
-                'main-estudiante/perfil',
-                'main-estudiante/amos',
-                'main-estudiante/marcar',
-                'main-estudiante/cambiar-clave'
-              ];
-
-              isValidRoute = studentPages.includes(path);
-              if (!isValidRoute) {
-                redirectPath = '/main-estudiante/home'; // Establecer la ruta de redirección para estudiantes
-              }
-            } else if (user.tipo === 'profesor') {
-              const professorPages = [
-                'main-profesor',
-                'main-profesor/home-profesor',
-                'main-profesor/perfil-profesor',
-                'main-profesor/ramos-profesor',
-                'main-profesor/generar-profesor',
-                'main-profesor/lista-alumno',
-                'main-profesor/cambiar-clave-profesor'
-              ];
-              console.log('Rutas válidas para profesor:', professorPages);
-              isValidRoute = professorPages.includes(path);
-              console.log('¿Ruta válida para profesor?', isValidRoute);
-              if (!isValidRoute) {
-                redirectPath = '/main-profesor/home-profesor'; // Establecer la ruta de redirección para profesores
-              }
-            }
-
-            // Si la ruta no es válida, redirigir
-            if (!isValidRoute) {
-              this.utilsSvc.routerLink(redirectPath);
-            }
-            resolve(isValidRoute); // Retorna true o false según la validez de la ruta
-          } else {
+      // Verificar el estado de autenticación en Firebase
+      if (navigator.onLine) {  // Si hay conexión a internet, comprobar en Firebase
+        this.firebaseSvc.getAuth().onAuthStateChanged((auth) => {
+          if (!auth) {
+            // Si no está autenticado en Firebase, redirigir al login
             this.utilsSvc.routerLink('/login');
             resolve(false);
+            return;
           }
-        } else {
-          this.utilsSvc.routerLink('/login');
-          resolve(false);
-        }
-      });
+
+          // Si está autenticado en Firebase, permitir el acceso según su tipo de usuario
+          this.checkRoutePermission(route, user, resolve);
+        });
+      } else {
+        // Si está offline, usar localStorage para validar el acceso
+        this.checkRoutePermission(route, user, resolve);
+      }
     });
+  }
+
+  private checkRoutePermission(route: ActivatedRouteSnapshot, user: any, resolve: any) {
+    const path = route.url.map(segment => segment.path).join('/');
+    const userType = user.tipo;
+
+    let isValidRoute = false;
+    if (userType === 'estudiante') {
+      const studentPages = [
+        'main-estudiante',
+        'main-estudiante/home',
+        'main-estudiante/perfil',
+        'main-estudiante/ramos',
+        'main-estudiante/marcar',
+        'main-estudiante/cambiar-clave'
+      ];
+      isValidRoute = studentPages.includes(path);
+    } else if (userType === 'profesor') {
+      const professorPages = [
+        'main-profesor',
+        'main-profesor/home-profesor',
+        'main-profesor/perfil-profesor',
+        'main-profesor/ramos-profesor',
+        'main-profesor/generar-profesor',
+        'main-profesor/lista-alumno',
+        'main-profesor/cambiar-clave-profesor'
+      ];
+      isValidRoute = professorPages.includes(path);
+    }
+
+    if (!isValidRoute) {
+      this.utilsSvc.routerLink('/login');
+      resolve(false);
+    } else {
+      resolve(true);
+    }
   }
 }

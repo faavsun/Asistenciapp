@@ -1,11 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { MenuItem } from '../../../interfaces/menu-item';
 import { MenuController } from '@ionic/angular';
 import { AppComponent } from 'src/app/app.component';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { Asignatura } from 'src/app/models/asignatura.model';
-import { User } from 'src/app/models/user.model';
 import { Router } from '@angular/router';
 
 @Component({
@@ -14,38 +13,64 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
-
   firebaseSvc = inject(FirebaseService);
   utilsSvc = inject(UtilsService);
-  asignaturas: { asignatura: Asignatura, seccionId: string }[] = []; // Array modificado
+  localStorageSvc = inject(LocalStorageService);
+  asignaturas: { asignatura: Asignatura; seccionId: string }[] = []; // Array modificado
 
-  constructor(private router: Router, private appComponent: AppComponent, private menuCtrl: MenuController) { }
+  constructor(
+    private router: Router,
+    private appComponent: AppComponent,
+    private menuCtrl: MenuController
+  ) {}
 
   ngOnInit() {
-    this.menuCtrl.enable(true); // Desactivar el menú en esta vista
+    this.menuCtrl.enable(true); // Activar el menú en esta vista
     this.loadAsignaturas();
   }
 
   async loadAsignaturas() {
     const loading = await this.utilsSvc.loading();
     await loading.present();
-    const uidEstudiante = localStorage.getItem('userUid'); // Asegúrate de que 'userUid' esté disponible
-    console.log('UID Estudiante:', uidEstudiante); // Verifica que obtienes el UID correctamente
-    if (uidEstudiante) {
-      this.asignaturas = await this.firebaseSvc.getAsignaturasDeEstudiante(uidEstudiante);
-      console.log('Asignaturas Cargadas:', this.asignaturas); // Verifica que se cargan las asignaturas junto con los IDs de las secciones
-    } else {
-      console.warn('No se encontró el UID del estudiante en localStorage.');
+
+    try {
+      const hasInternet = await this.utilsSvc.checkInternetConnection();
+      if (hasInternet) {
+        console.log('Conexión a internet detectada. Cargando desde Firebase...');
+        const uidEstudiante = this.localStorageSvc.get('userUid'); // UID del estudiante
+        console.log('UID Estudiante:', uidEstudiante);
+
+        if (uidEstudiante) {
+          // Cargar asignaturas desde Firebase
+          this.asignaturas = await this.firebaseSvc.getAsignaturasDeEstudiante(uidEstudiante);
+          console.log('Asignaturas cargadas desde Firebase:', this.asignaturas);
+
+          // Guardar asignaturas en localStorage
+          this.localStorageSvc.set('asignaturas', this.asignaturas);
+        } else {
+          console.warn('No se encontró el UID del estudiante en localStorage.');
+        }
+      } else {
+        console.warn('Sin conexión a internet. Cargando desde localStorage...');
+        // Cargar asignaturas desde localStorage si no hay conexión
+        const asignaturasGuardadas = this.localStorageSvc.get('asignaturas');
+        if (asignaturasGuardadas) {
+          this.asignaturas = asignaturasGuardadas;
+          console.log('Asignaturas cargadas desde localStorage:', this.asignaturas);
+        } else {
+          console.warn('No hay asignaturas guardadas en localStorage.');
+        }
+      }
+    } catch (error) {
+      console.error('Error al cargar asignaturas:', error);
+    } finally {
+      loading.dismiss();
     }
-    loading.dismiss();
   }
 
   abrirDetalleSeccion(seccionId: string) {
-    console.log('ID de la sección:', seccionId); // Verificar el ID antes de navegar
-    this.router.navigate(['/main-estudiante/ramos', seccionId]); // Navega a la página de detalle de la sección con el UID
+    console.log('ID de la sección:', seccionId);
+    this.router.navigate(['/main-estudiante/ramos', seccionId]);
   }
 
-  signOut() {
-    this.firebaseSvc.signOut();
-  }
 }

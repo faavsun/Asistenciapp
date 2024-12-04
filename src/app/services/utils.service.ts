@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingController, ToastController, ToastOptions } from '@ionic/angular';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { Network } from '@capacitor/network';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,26 @@ export class UtilsService {
   router = inject(Router);
   
   constructor(private toastController: ToastController) {}
+
+  // Método para verificar la conexión a internet
+  async checkInternetConnection(): Promise<boolean> {
+    // Verificar si estamos en un dispositivo móvil o en el navegador
+    if (this.isMobile()) {
+      // Usamos la API de Capacitor para dispositivos móviles
+      const status = await Network.getStatus();
+      return status.connected;
+    } else {
+      // En el navegador, usamos la API estándar de JavaScript
+      return navigator.onLine;  // Devuelve true si hay conexión
+    }
+  }
+
+  // Método para detectar si estamos en un dispositivo móvil
+  isMobile(): boolean {
+    return /android|iphone|ipad|ipod|windows phone/i.test(navigator.userAgent);
+  }
+
+
 
   async showToast(message: string, duration: number = 2000): Promise<void> {
     const toast = await this.toastController.create({

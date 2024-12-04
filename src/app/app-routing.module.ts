@@ -94,11 +94,11 @@ const routes: Routes = [
   },,
   {
     path: 'crear-asignatura',
-    loadChildren: () => import('./pages/main-profesor/crear-asignatura/crear-asignatura.module').then( m => m.CrearAsignaturaPageModule)
+    loadChildren: () => import('./pages/main-profesor/crear-asignatura/crear-asignatura.module').then( m => m.CrearAsignaturaPageModule), canActivate:[AuthGuard]
   },
   {
     path: 'crear-seccion',
-    loadChildren: () => import('./pages/main-profesor/crear-seccion/crear-seccion.module').then( m => m.CrearSeccionPageModule)
+    loadChildren: () => import('./pages/main-profesor/crear-seccion/crear-seccion.module').then( m => m.CrearSeccionPageModule), canActivate:[AuthGuard]
   },
   {
     path: 'main-estudiante',

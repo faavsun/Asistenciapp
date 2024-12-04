@@ -1,14 +1,16 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { AlertController, ModalController, Platform } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { MenuController } from '@ionic/angular';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { BarcodeScanningModalComponent } from './barcode-scanning-modal.component';
 import { LensFacing } from '@capacitor-mlkit/barcode-scanning';
-import { Asignatura } from 'src/app/models/asignatura.model'; 
-import { Seccion } from 'src/app/models/seccion.model'; 
+import { Asignatura } from 'src/app/models/asignatura.model';
+import { Seccion } from 'src/app/models/seccion.model';
 import { ActivatedRoute } from '@angular/router';
 import { Geolocation } from '@capacitor/geolocation';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { User } from 'src/app/models/user.model';
 
 @Component({
   selector: 'app-marcar',
@@ -16,26 +18,26 @@ import { Geolocation } from '@capacitor/geolocation';
   styleUrls: ['./marcar.page.scss'],
 })
 export class MarcarPage implements OnInit {
-
   firebaseSvc = inject(FirebaseService);
   utilsSvc = inject(UtilsService);
+  localStorageSvc = inject(LocalStorageService);
   latitude: number;
   longitude: number;
-  altitude: number | string; 
+  altitude: number | string;
   ScanResult = '';
-  
   currentDate: string;
   currentTime: string;
 
   asignatura: Asignatura;
   seccion: Seccion;
+  nombre: string;
 
   constructor(
     private alertController: AlertController,
     private menuCtrl: MenuController,
     private modalController: ModalController,
     private route: ActivatedRoute
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
@@ -49,60 +51,139 @@ export class MarcarPage implements OnInit {
   async loadSeccionAndAsignatura(seccionId: string) {
     const loading = await this.utilsSvc.loading();
     await loading.present();
-    
-    // Obtiene la ubicación actual
-    const { latitude, longitude, altitude } = await this.getCurrentLocation() || {};
-    this.latitude = latitude;
-    this.longitude = longitude;
-    this.altitude = altitude !== undefined ? altitude : 'N/A';
-  
-    // Obtiene la fecha y hora actual
-    const date = new Date();
-    this.currentDate = date.toLocaleDateString();
-    this.currentTime = date.toLocaleTimeString();
-  
+
     try {
-      // Obtiene la sección y la asignatura en paralelo
-      const seccionPromise = this.firebaseSvc.getSeccionPorId(seccionId);
-      const asignaturaPromise = seccionPromise.then(seccion => 
-        this.firebaseSvc.getAsignaturaPorId(seccion.asignatura));
-      
-      // Espera las promesas de forma paralela
-      const [seccion, asignatura] = await Promise.all([seccionPromise, asignaturaPromise]);
-  
-      // Actualiza las propiedades con los datos obtenidos
-      this.seccion = seccion;
-      this.asignatura = asignatura;
-  
-      // Obtiene el nombre del profesor solo si se encontró la sección
-      if (this.seccion && this.seccion.profesor) {
-        const profesor = await this.firebaseSvc.getUserById(this.seccion.profesor);
-        this.seccion.profesor = profesor ? `${profesor.name} ${profesor.lastname}` : 'Nombre del Profesor';
+      // Obtiene la fecha y hora actual
+      const date = new Date();
+      this.currentDate = date.toLocaleDateString();
+      this.currentTime = date.toLocaleTimeString();
+
+      // Verifica si el dispositivo está en línea
+      const isOnline = await this.utilsSvc.checkInternetConnection();
+
+
+
+      if (isOnline) {
+        // Si está en línea, obtener datos de Firebase
+        const seccionPromise = this.firebaseSvc.getSeccionPorId(seccionId);
+        const asignaturaPromise = seccionPromise.then(seccion =>
+          this.firebaseSvc.getAsignaturaPorId(seccion.asignatura)
+        );
+
+        const [seccion, asignatura] = await Promise.all([seccionPromise, asignaturaPromise]);
+        this.seccion = seccion;
+        this.asignatura = asignatura;
+
+        // Guarda los datos en almacenamiento local para futuras consultas offline
+        await this.localStorageSvc.set(`seccion_${seccionId}`, seccion);
+        await this.localStorageSvc.set(`asignatura_${seccion.asignatura}`, asignatura);
+
+        console.log('Datos del seccion del locallll:', this.seccion);
+        console.log('Datos del profesor:', this.seccion.profesor);
+
+
+        if (this.seccion && this.seccion.profesor) {
+          const profesor = await this.firebaseSvc.getUserById(this.seccion.profesor);
+          this.seccion.profesor = profesor ? `${profesor.name} ${profesor.lastname}` : 'Nombre del Profesor';
+          // Guardar el nombre del profesor en el localStorage
+          this.nombre = profesor ? `${profesor.uid}`: 'uid del profesor';
+          console.log('Datos del profesor del locallll:', this.seccion.profesor);
+          await this.localStorageSvc.set(`profesor_${this.nombre}`, profesor);
+        }
+
+        // Obtén la ubicación actual o la última conocida
+        const coordinates = await this.getCurrentLocation();
+
+        this.latitude = coordinates.latitude;
+        this.longitude = coordinates.longitude;
+        this.altitude = coordinates.altitude || 'N/A';
+
+
+
+      } else {
+        // Si está fuera de línea, obtener datos desde almacenamiento local
+        const storedSeccion = await this.localStorageSvc.get(`seccion_${seccionId}`);
+        const storedAsignatura = await this.localStorageSvc.get(`asignatura_${storedSeccion?.asignatura}`);
+
+        this.seccion = storedSeccion;
+        this.asignatura = storedAsignatura;
+        console.log('antes:',storedSeccion);
+        if (this.seccion && this.seccion.profesor) {
+          // Si no hay nombre del profesor, intenta obtenerlo desde localStorage
+          const profesor = await this.localStorageSvc.get(`profesor_${this.seccion.profesor}`);
+          console.log('durante:', profesor);
+          console.log('durante:', this.seccion);
+          console.log('durante:', this.asignatura);
+          console.log('durante:', this.seccion.profesor);
+          if (profesor) {
+            console.log('Datos del profesor del locallll:');
+            console.log('Datos del profesor del locallll:', profesor.name, profesor.lastname);
+            this.seccion.profesor = `${profesor.name} ${profesor.lastname}`;
+          }
+        }
+
+        // Obtén la ubicación actual o la última conocida
+        const coordinates = await this.getCurrentLocation();
+
+        this.latitude = coordinates.latitude;
+        this.longitude = coordinates.longitude;
+        this.altitude = coordinates.altitude || 'N/A';
+
+
+
+
+
       }
-  
-      console.log('Datos de la sección:', this.seccion);
-      console.log('Datos de la asignatura:', this.asignatura);
     } catch (error) {
       console.error('Error al cargar sección o asignatura:', error);
     } finally {
-      // Asegúrate de ocultar el loading
       loading.dismiss();
     }
   }
 
+
+
+
+
+
+
   private async getCurrentLocation() {
     try {
-      const coordinates = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
-      return {
+      // Intenta obtener la ubicación actual
+      const coordinates = await Geolocation.getCurrentPosition({
+        enableHighAccuracy: true,
+        timeout: 10000, // Tiempo de espera
+      });
+
+      const location = {
         latitude: coordinates.coords.latitude,
         longitude: coordinates.coords.longitude,
-        altitude: coordinates.coords.altitude ?? 0 // Usar el operador de coalescencia nula
+        altitude: coordinates.coords.altitude || 0,
       };
+
+      // Guarda la ubicación en el almacenamiento local
+      await this.localStorageSvc.set('last_location', location);
+
+      console.log('Ubicación actual obtenida y guardada:', location);
+      return location;
     } catch (error) {
-      console.error('Error obteniendo la ubicación:', error);
-      return null;
+      console.error('Error obteniendo la ubicación actual:', error);
+
+      // Intenta recuperar la última ubicación conocida
+      const lastLocation = await this.localStorageSvc.get('last_location');
+      if (lastLocation) {
+        console.warn('Usando la última ubicación conocida:', lastLocation);
+        return lastLocation;
+      } else {
+        console.error('No hay datos de ubicación disponibles.');
+        return null;
+      }
     }
   }
+
+
+
+
 
   async startScan() {
     const modal = await this.modalController.create({
@@ -304,37 +385,67 @@ export class MarcarPage implements OnInit {
 
 
 
-  // Método para registrar la asistencia
-  async registerAttendance(uidFromQR: string) {
-    try {
-      // Obtener el UID del estudiante (esto dependerá de cómo se almacena el UID en el QR)
-      const estudianteId = localStorage.getItem('userUid');
-      
-      // Verificar si ya existe un registro de asistencia para este estudiante y esta sección
-      const asistenciaExistente = await this.firebaseSvc.obtenerAsistenciaEstudiantePorSeccion(estudianteId, this.seccion?.uid);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   
+/**
+ * Registra la asistencia del estudiante para una sección específica.
+ */
+async registerAttendance(uidFromQR: string) {
+  try {
+    const isOnline = await this.utilsSvc.checkInternetConnection(); // Verificar si hay conexión
+    const estudianteId = localStorage.getItem('userUid');
+
+    if (isOnline) {
+      // Modo online: Registrar directamente en Firebase
+      const asistenciaExistente = await this.firebaseSvc.obtenerAsistenciaEstudiantePorSeccion(estudianteId, this.seccion?.uid);
+
       if (asistenciaExistente && asistenciaExistente.length > 0) {
-        // Si existe un registro de asistencia, lo actualizamos
-        const asistencia = asistenciaExistente[0]; // Tomamos el primer registro (ya que asumimos que es único)
+        const asistencia = asistenciaExistente[0];
         const updatedTotal = (asistencia.total_asistencia || 0) + 1;
-        
-        console.log('ID del documento:', asistencia.id);  // Aquí puedes ver el ID del documento
-        await this.firebaseSvc.actualizarAsistencia(asistencia.id, updatedTotal); // Ahora usamos 'asistencia.id'
-        console.log('Asistencia actualizada con éxito');
+        await this.firebaseSvc.actualizarAsistencia(asistencia.id, updatedTotal);
       } else {
-        // Si no existe un registro, lo creamos
         const nuevoRegistroAsistencia = {
           estudiante_id: estudianteId,
           seccion_id: this.seccion?.uid,
-          total_asistencia: 1
+          total_asistencia: 1,
         };
         await this.firebaseSvc.crearAsistencia(nuevoRegistroAsistencia);
-        console.log('Nuevo registro de asistencia creado con éxito');
       }
-    } catch (error) {
-      console.error('Error al registrar asistencia:', error);
+    } else {
+      // Modo offline: Guardar en almacenamiento local
+      const offlineAsistencia = {
+        estudiante_id: estudianteId,
+        seccion_id: this.seccion?.uid,
+        total_asistencia: 1,
+        timestamp: new Date().toISOString(), // Para futuras sincronizaciones
+      };
+
+      // Guardar asistencia en almacenamiento local
+      let asistenciasOffline = (await this.localStorageSvc.get('asistencias_offline')) || [];
+      asistenciasOffline.push(offlineAsistencia);
+      await this.localStorageSvc.set('asistencias_offline', asistenciasOffline);
+
+      this.utilsSvc.showToast('Asistencia registrada en modo offline.');
     }
+  } catch (error) {
+    console.error('Error al registrar asistencia:', error);
   }
+}
 
 
 
@@ -350,39 +461,43 @@ export class MarcarPage implements OnInit {
 
 
 
-  // Método que muestra el mensaje de confirmación para registrar la asistencia
-  async Marcar() {
-    const alert = await this.createAlert('Registrar asistencia', '¿Acepta registrar asistencia?');
-    await alert.present();
-    
-    const alertResult = await alert.onDidDismiss();
-    if (alertResult.role === 'confirm') {
-      await this.registerAttendance(this.ScanResult);
-    }
+
+
+
+
+// Método que muestra el mensaje de confirmación para registrar la asistencia
+async Marcar() {
+  const alert = await this.createAlert('Registrar asistencia', '¿Acepta registrar asistencia?');
+  await alert.present();
+  
+  const alertResult = await alert.onDidDismiss();
+  if (alertResult.role === 'confirm') {
+    await this.registerAttendance(this.ScanResult);
   }
+}
 
-  private async createAlert(header: string, message: string) {
-    const alert = await this.alertController.create({
-      header,
-      message,
-      backdropDismiss: false,
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-          handler: () => console.log('Botón Cancelar'),
-        },
-        {
-          text: 'OK',
-          role: 'confirm',
-          handler: () => this.navegar(),
-        },
-      ],
-    });
-    return alert;
-  }
+private async createAlert(header: string, message: string) {
+  const alert = await this.alertController.create({
+    header,
+    message,
+    backdropDismiss: false,
+    buttons: [
+      {
+        text: 'Cancelar',
+        role: 'cancel',
+        handler: () => console.log('Botón Cancelar'),
+      },
+      {
+        text: 'OK',
+        role: 'confirm',
+        handler: () => this.navegar(),
+      },
+    ],
+  });
+  return alert;
+}
 
-  navegar() {
-    this.utilsSvc.routerLink('/main-estudiante/home');
-  }
+navegar() {
+  this.utilsSvc.routerLink('/main-estudiante/home');
+}
 }

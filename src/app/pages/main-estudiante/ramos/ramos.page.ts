@@ -2,10 +2,10 @@ import { Component, inject, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Seccion } from 'src/app/models/seccion.model';
 import { Asignatura } from 'src/app/models/asignatura.model';
-import { User } from 'src/app/models/user.model';  // Asegúrate de importar el modelo de User
 
 @Component({
   selector: 'app-ramos',
@@ -15,11 +15,13 @@ import { User } from 'src/app/models/user.model';  // Asegúrate de importar el 
 export class RamosPage implements OnInit {
   firebaseSvc = inject(FirebaseService);
   utilsSvc = inject(UtilsService);
+  localStorageSvc = inject(LocalStorageService);
   seccionId: string | null = null;
   seccion: Seccion | null = null;
   asignatura: Asignatura | null = null;
-  asistenciaData: any[] = [];  // Esta propiedad almacenará los datos de asistencia
-  userId: string = '';  // Aquí guardaremos el ID del estudiante
+  asistenciaData: any[] = [];
+  userId: string = '';
+  hasInternet: boolean = true; // Para controlar si hay conexión a internet
 
   constructor(
     private router: Router,
@@ -30,14 +32,18 @@ export class RamosPage implements OnInit {
   async ngOnInit() {
     this.seccionId = this.route.snapshot.paramMap.get('seccionId');
     console.log('ID de la sección:', this.seccionId);
-    
-    // Obtener el ID del estudiante desde el localStorage o un servicio
+
+    // Verificar la conexión a internet usando UtilsService
+    this.hasInternet = await this.utilsSvc.checkInternetConnection();
+    console.log('Conexión a internet:', this.hasInternet);
+
+    // Obtener el ID del estudiante
     const user = this.utilsSvc.getFromLocalStorage('user');
-    this.userId = user ? user.uid : ''; // Asegúrate de tener el UID del estudiante
+    this.userId = user ? user.uid : '';
 
     if (this.seccionId) {
       await this.loadSeccionData(this.seccionId);
-      await this.loadAsistenciaData(this.userId, this.seccionId);  // Cargar todos los datos de asistencia
+      await this.loadAsistenciaData(this.userId, this.seccionId);
     } else {
       console.error('Sección ID no proporcionado');
     }
@@ -48,11 +54,22 @@ export class RamosPage implements OnInit {
     await loading.present();
 
     try {
-      this.seccion = await this.firebaseSvc.getSeccionById(seccionId);
-      if (!this.seccion) throw new Error(`Sección no encontrada para el ID: ${seccionId}`);
+      if (this.hasInternet) {
+        // Cargar datos desde Firebase
+        this.seccion = await this.firebaseSvc.getSeccionById(seccionId);
+        if (!this.seccion) throw new Error(`Sección no encontrada en Firebase para el ID: ${seccionId}`);
+        
+        // Guardar los datos en localStorage si hay conexión
+        this.localStorageSvc.set('seccion_' + seccionId, this.seccion);
+      } else {
+        // Cargar datos desde localStorage
+        console.warn(`No hay internet, cargando sección desde localStorage`);
+        this.seccion = this.localStorageSvc.get('seccion_' + seccionId);
+        if (!this.seccion) throw new Error(`Sección no encontrada en localStorage para el ID: ${seccionId}`);
+      }
 
       console.log('Datos de la sección:', this.seccion);
-      await this.loadAsignaturaAndProfesor(this.seccion.asignatura, this.seccion.profesor);
+      await this.loadAsignaturaAndProfesor(this.seccion?.asignatura, this.seccion?.profesor);
     } catch (error) {
       this.handleError(error);
     } finally {
@@ -62,42 +79,77 @@ export class RamosPage implements OnInit {
 
   private async loadAsignaturaAndProfesor(asignaturaId: string | undefined, profesorId: string | undefined) {
     if (asignaturaId) {
-      this.asignatura = await this.firebaseSvc.getAsignaturaById(asignaturaId);
-      console.log('Datos de la asignatura:', this.asignatura);
-    } else {
-      console.error('La sección no tiene una asignatura válida');
+      try {
+        if (this.hasInternet) {
+          // Cargar asignatura desde Firebase
+          this.asignatura = await this.firebaseSvc.getAsignaturaById(asignaturaId);
+          if (!this.asignatura) throw new Error(`Asignatura no encontrada en Firebase para el ID: ${asignaturaId}`);
+          
+          // Guardar la asignatura en localStorage si hay conexión
+          this.localStorageSvc.set('asignatura_' + asignaturaId, this.asignatura);
+        } else {
+          // Cargar asignatura desde localStorage
+          console.warn(`No hay internet, cargando asignatura desde localStorage`);
+          this.asignatura = this.localStorageSvc.get('asignatura_' + asignaturaId);
+          if (!this.asignatura) throw new Error(`Asignatura no encontrada en localStorage para el ID: ${asignaturaId}`);
+        }
+        console.log('Datos de la asignatura:', this.asignatura);
+      } catch (error) {
+        console.error('Error cargando la asignatura:', error);
+      }
     }
 
     if (profesorId) {
-      const profesor = await this.firebaseSvc.getUserById(profesorId);
-      if (profesor) {
-        this.seccion.profesor = `${profesor.name} ${profesor.lastname}`;
-        console.log('Datos del profesor:', profesor);
-      } else {
-        console.error('Profesor no encontrado para el UID:', profesorId);
+      try {
+        let profesor;
+        if (this.hasInternet) {
+          // Cargar profesor desde Firebase
+          profesor = await this.firebaseSvc.getUserById(profesorId);
+          if (!profesor) throw new Error(`Profesor no encontrado en Firebase para el ID: ${profesorId}`);
+          
+          // Guardar el profesor en localStorage si hay conexión
+          this.localStorageSvc.set('user_' + profesorId, profesor);
+        } else {
+          // Cargar profesor desde localStorage
+          console.warn(`No hay internet, cargando profesor desde localStorage`);
+          profesor = this.localStorageSvc.get('user_' + profesorId);
+          if (!profesor) throw new Error(`Profesor no encontrado en localStorage para el ID: ${profesorId}`);
+        }
+        if (profesor) {
+          this.seccion!.profesor = `${profesor.name} ${profesor.lastname}`;
+          console.log('Datos del profesor:', profesor);
+        }
+      } catch (error) {
+        console.error('Error cargando el profesor:', error);
       }
-    } else {
-      console.error('La sección no tiene un UID de profesor válido');
     }
   }
 
-// Método para cargar los datos de asistencia
-private async loadAsistenciaData(estudianteId: string, seccionId: string) {
-  try {
-    this.asistenciaData = await this.firebaseSvc.getAsistenciaPorEstudianteYSeccion(estudianteId, seccionId);
-    if (this.asistenciaData.length === 0) {
-      // Si no hay registros de asistencia, mostrar 0
-      console.log('No hay registros de asistencia, mostrando 0');
-      this.asistenciaData = [{ total_asistencia: 0 }];  // Agregar un objeto con total_asistencia 0
+  private async loadAsistenciaData(estudianteId: string, seccionId: string) {
+    try {
+      if (this.hasInternet) {
+        // Cargar asistencia desde Firebase
+        this.asistenciaData = await this.firebaseSvc.getAsistenciaPorEstudianteYSeccion(estudianteId, seccionId);
+        if (!this.asistenciaData || this.asistenciaData.length === 0) {
+          this.asistenciaData = [{ total_asistencia: 0 }];
+        }
+        
+        // Guardar los datos de asistencia en localStorage si hay conexión
+        this.localStorageSvc.set(`asistencia_${estudianteId}_${seccionId}`, this.asistenciaData);
+      } else {
+        // Cargar asistencia desde localStorage
+        console.warn(`No hay internet, cargando asistencia desde localStorage`);
+        this.asistenciaData = this.localStorageSvc.get(`asistencia_${estudianteId}_${seccionId}`) || [{ total_asistencia: 0 }];
+      }
+      console.log('Datos de asistencia:', this.asistenciaData);
+    } catch (error) {
+      console.error('Error obteniendo los datos de asistencia:', error);
+      this.asistenciaData = [{ total_asistencia: 0 }];
     }
-    console.log('Datos de asistencia:', this.asistenciaData);  // Muestra los datos completos de asistencia
-  } catch (error) {
-    console.error('Error obteniendo los datos de asistencia:', error);
-    this.asistenciaData = [{ total_asistencia: 0 }];  // Si hay error, mostrar 0
   }
-}
+
   private handleError(error: any) {
-    console.error('Error al cargar los datos de la sección:', error);
+    console.error('Error al cargar los datos:', error);
   }
 
   Marcar() {

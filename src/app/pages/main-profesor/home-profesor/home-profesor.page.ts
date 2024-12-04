@@ -7,6 +7,7 @@ import { Asignatura } from 'src/app/models/asignatura.model';
 import { Seccion } from 'src/app/models/seccion.model';
 import { User } from 'src/app/models/user.model';
 import { Router } from '@angular/router';
+import { LocalStorageService } from 'src/app/services/local-storage.service'; // Importar LocalStorageService
 
 @Component({
   selector: 'app-home-profesor',
@@ -14,120 +15,91 @@ import { Router } from '@angular/router';
   styleUrls: ['./home-profesor.page.scss'],
 })
 export class HomeProfesorPage implements OnInit {
-
   firebaseSvc = inject(FirebaseService);
   utilsSvc = inject(UtilsService);
 
   asignaturas: Asignatura[] = [];
   seccionesPorAsignatura: { [key: string]: Seccion[] } = {};
   nombreprofe: string = '';
+  localStorageSvc = inject(LocalStorageService); // Inyectar LocalStorageService
 
-
-  constructor(private router: Router, private appComponent: AppComponent, private menuCtrl: MenuController) { }
-
-  // Función que obtiene todas las asignaturas asociadas al profesor
-  async obtenerTodasLasAsignaturas(profesorUid: string) {
-    const loading = await this.utilsSvc.loading();
-    await loading.present();
-
-    try {
-      const asignaturas = await this.firebaseSvc.getAsignaturasPorProfesor(profesorUid); // Modificación aquí
-      this.asignaturas = asignaturas;
-      console.log('Asignaturas obtenidas para el profesor:', this.asignaturas);
-    } catch (error) {
-      console.error("Error al obtener las asignaturas:", error);
-    } finally {
-      loading.dismiss();
-    }
-  }
-
-
-
-
-  // Cargar las secciones correspondientes a una asignatura
-async cargarSecciones(asignaturaId: string) {
-  if (!this.seccionesPorAsignatura[asignaturaId]) {
-    const secciones = await this.firebaseSvc.getAllSecciones();
-    console.log('Secciones obtenidas:', secciones);  // Verifica qué secciones obtienes
-    this.seccionesPorAsignatura[asignaturaId] = secciones.filter(seccion => seccion.asignatura === asignaturaId && seccion.profesor === this.user().uid);
-    console.log('Secciones filtradas:',asignaturaId,'',this.user().uid, this.seccionesPorAsignatura[asignaturaId]);  // Verifica el filtro
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  constructor(
+    private router: Router,
+    private appComponent: AppComponent,
+    private menuCtrl: MenuController
+  ) {}
 
   async ngOnInit() {
     const user = this.user();
 
     if (user && user.uid) {
       try {
-
-        const userData = await this.firebaseSvc.getProfesorNombre(user.uid);
-        this.nombreprofe = userData.name + ' ' + userData.lastname; // Suponiendo que 'nombre' es un campo en el documento del usuario
-
-
-        // Obtenemos las asignaturas para el profesor
-        await this.obtenerTodasLasAsignaturas(user.uid);
-
-        // Para cada asignatura obtenemos las secciones
-        for (const asignatura of this.asignaturas) {
-          await this.cargarSecciones(asignatura.uid); // Asignatura ahora tiene el uid del profesor
+        // Cargar datos desde localStorage si no hay conexión
+        const isOnline = await this.utilsSvc.checkInternetConnection();
+        if (isOnline) {
+          await this.cargarDatosDesdeFirebase(user.uid);
+        } else {
+          this.cargarDatosDesdeLocalStorage();
         }
       } catch (error) {
-        console.error("Error al obtener las asignaturas:", error);
+        console.error('Error al inicializar la página del profesor:', error);
       }
     } else {
-      console.error("El UID del profesor no está disponible.");
-      this.firebaseSvc.resetUserData(); // Resetea los datos si no hay usuario
+      console.error('El UID del profesor no está disponible.');
+      this.firebaseSvc.resetUserData();
     }
   }
 
+  async cargarDatosDesdeFirebase(profesorUid: string) {
+    const loading = await this.utilsSvc.loading();
+    await loading.present();
 
+    try {
+      // Obtener datos del profesor
+      const userData = await this.firebaseSvc.getProfesorNombre(profesorUid);
+      this.nombreprofe = userData.name + ' ' + userData.lastname;
 
+      // Obtener asignaturas del profesor
+      const asignaturas = await this.firebaseSvc.getAsignaturasPorProfesor(profesorUid);
+      this.asignaturas = asignaturas;
 
+      // Obtener secciones para cada asignatura
+      for (const asignatura of this.asignaturas) {
+        await this.cargarSecciones(asignatura.uid);
+      }
 
+      // Guardar los datos en localStorage
+      this.localStorageSvc.set('asignaturasProfesor', this.asignaturas);
+      this.localStorageSvc.set('seccionesPorAsignatura', this.seccionesPorAsignatura);
+      this.localStorageSvc.set('nombreProfesor', this.nombreprofe);
+    } catch (error) {
+      console.error('Error al cargar datos desde Firebase:', error);
+    } finally {
+      loading.dismiss();
+    }
+  }
 
+  cargarDatosDesdeLocalStorage() {
+    this.asignaturas = this.localStorageSvc.get('asignaturasProfesor') || [];
+    this.seccionesPorAsignatura = this.localStorageSvc.get('seccionesPorAsignatura') || {};
+    this.nombreprofe = this.localStorageSvc.get('nombreProfesor') || '';
+  }
 
+  async cargarSecciones(asignaturaId: string) {
+    if (!this.seccionesPorAsignatura[asignaturaId]) {
+      const secciones = await this.firebaseSvc.getAllSecciones();
+      this.seccionesPorAsignatura[asignaturaId] = secciones.filter(
+        (seccion) => seccion.asignatura === asignaturaId && seccion.profesor === this.user().uid
+      );
+    }
+  }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // Obtener el usuario desde localStorage
   user(): User {
     return this.utilsSvc.getFromLocalStorage('user');
   }
 
-  // Navegar al detalle de la sección
   abrirDetalleSeccion(seccionId: string) {
     console.log('ID de la sección:', seccionId);
-    this.router.navigate(['/main-profesor/ramos-profesor', seccionId]); // Navega a la página de detalle de la sección con el UID
+    this.router.navigate(['/main-profesor/ramos-profesor', seccionId]);
   }
-
 }

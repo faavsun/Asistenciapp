@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import {AngularFireAuth} from '@angular/fire/compat/auth'
-import {getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile,sendPasswordResetEmail,updatePassword} from 'firebase/auth'
+import {getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile,sendPasswordResetEmail,updatePassword, signOut} from 'firebase/auth'
 import { User } from '../models/user.model';
 import {AngularFirestore} from '@angular/fire/compat/firestore';
 import {getFirestore,setDoc,doc, getDoc, collectionData, getDocs,collection,Firestore, addDoc} from '@angular/fire/firestore';
@@ -10,7 +10,7 @@ import { Asignatura } from '../models/asignatura.model';
 import { AlumnoSeccion } from '../models/alumnoseccion.model';
 import { Observable, switchMap, forkJoin, combineLatest, map } from 'rxjs';
 import { Asistencia } from '../models/asistencia.model';
-
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 
 @Injectable({
@@ -21,6 +21,7 @@ export class FirebaseService {
   auth = inject(AngularFireAuth);
   firestore = inject(AngularFirestore);
   utilsSvc = inject(UtilsService);
+  localStorageSvc = inject(LocalStorageService);
 
  asignaturas: { id: string; nombre: string; profesor: string }[] = [];
   seccionesPorAsignatura: { [key: string]: any[] } = {}; // Cambia el tipo según tu necesidad
@@ -101,11 +102,13 @@ sendRecoveryEmail(email: string){
 
 //========== Cerrar sesión===============
 signOut() {
-  getAuth().signOut().then(() => {
-    localStorage.removeItem('user'); // Asegúrate de que este sea el nombre correcto
-    localStorage.removeItem('userUid'); // Elimina el UID del usuario
-    this.resetUserData(); // Resetea datos del usuario
-    this.utilsSvc.routerLink('/login');
+  const auth = getAuth(); // Obtener instancia de autenticación de Firebase
+  signOut(auth).then(() => {
+    this.resetUserData(); // Resetea los datos del usuario del localStorage
+    this.utilsSvc.routerLink('/login'); // Redirige al login
+  }).catch((error) => {
+    // Manejar errores, si es necesario
+    console.error('Error al cerrar sesión:', error);
   });
 }
 
@@ -774,5 +777,53 @@ async verificarInscripcionExistente(alumnoUid: string, asignaturaUid: string): P
     throw new Error('Error al verificar la inscripción');
   }
 }
+
+
+
+
+
+
+/**
+ * Sincroniza las asistencias almacenadas localmente con Firebase.
+ */
+async syncOfflineAttendance() {
+  const asistenciasOffline = await this.localStorageSvc.get('asistencias_offline');
+
+  if (asistenciasOffline && asistenciasOffline.length > 0) {
+    for (const asistencia of asistenciasOffline) {
+      const asistenciaExistente = await this.obtenerAsistenciaEstudiantePorSeccion(asistencia.estudiante_id, asistencia.seccion_id);
+
+      if (asistenciaExistente && asistenciaExistente.length > 0) {
+        const asistenciaFirebase = asistenciaExistente[0];
+        const updatedTotal = (asistenciaFirebase.total_asistencia || 0) + asistencia.total_asistencia;
+        await this.actualizarAsistencia(asistenciaFirebase.id, updatedTotal);
+      } else {
+        await this.crearAsistencia({
+          estudiante_id: asistencia.estudiante_id,
+          seccion_id: asistencia.seccion_id,
+          total_asistencia: asistencia.total_asistencia,
+        });
+      }
+    }
+
+    // Limpia los datos locales después de sincronizar
+    await this.localStorageSvc.set('asistencias_offline', []);
+    console.log('Sincronización de asistencias completada.');
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
