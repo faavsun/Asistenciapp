@@ -40,7 +40,6 @@ export class CrearSeccionPage implements OnInit {
 
     // Obtener el objeto completo del usuario desde localStorage
     const userData = localStorage.getItem('user');
-
     if (userData) {
       const user = JSON.parse(userData);
       this.profesorUid = user.uid; // Guardar UID en la propiedad del componente
@@ -97,7 +96,7 @@ export class CrearSeccionPage implements OnInit {
         nombre: seccionData.nombre,
         asignatura: seccionData.asignatura,
         aula: seccionData.aula,
-        profesor: seccionData.profesor,
+        profesor: this.profesorUid,
       };
   
       try {
