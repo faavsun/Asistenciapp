@@ -1,5 +1,6 @@
 # Asistenciapp
 Es una aplicación móvil desarrollada para Duoc UC con el objetivo de optimizar y automatizar el proceso de registro de asistencia a clases. La aplicación permite que los estudiantes registren su asistencia escaneando un código QR generado por el docente, eliminando los errores comunes en el proceso manual y mejorando la eficiencia en la toma de asistencia.
+## Imagenes
 
 ## Funcionalidades
 Registro de Asistencia Automatizado: Los estudiantes pueden registrar su asistencia escaneando un código QR proyectado por el docente en clase.
