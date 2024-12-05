@@ -243,10 +243,19 @@ async getAsignaturasPorProfesor(profesorUid: string): Promise<Asignatura[]> {
 
 
 // Método para obtener todos los documentos de la colección 'secciones'
+// Método para obtener todos los documentos de la colección 'secciones' con cache
 async getAllSecciones(): Promise<Seccion[]> {
   try {
+    // Intentar obtener las secciones desde el almacenamiento local primero
+    const cachedSecciones = await this.localStorageSvc.get('secciones');
+    if (cachedSecciones) {
+      console.log('Secciones obtenidas desde localStorage');
+      return cachedSecciones; // Devuelve las secciones desde el cache
+    }
+
+    // Si no están en localStorage, obtenerlas de Firestore
     const snapshot = await this.firestore.collection('seccion').get().toPromise();
-    
+
     // Verificar si los documentos están vacíos
     if (snapshot.empty) {
       console.log('No se encontraron secciones en Firestore.');
@@ -265,6 +274,10 @@ async getAllSecciones(): Promise<Seccion[]> {
         total_clases: data.total_clases || 0  // Si no tiene total_clases, asigna 0
       };
     });
+
+    // Guardar las secciones en localStorage para evitar futuras consultas
+    await this.localStorageSvc.set('secciones', secciones);
+
     console.log("Secciones obtenidas de Firestore:", secciones); // Verifica si se obtienen datos
     return secciones;
   } catch (error) {
@@ -822,12 +835,60 @@ async syncOfflineAttendance() {
 
 
 
+  // Método para sincronizar las asignaturas offline con Firebase
+  async syncOfflineAsignaturas() {
+    const asignaturasOffline = (await this.localStorageSvc.get('asignaturasOffline')) || [];
+
+    if (asignaturasOffline.length > 0) {
+      for (const asignatura of asignaturasOffline) {
+        try {
+          // Crear la asignatura en Firebase
+          const asignaturaCreada = await this.createAsignatura(asignatura);
+          asignatura.uid = asignaturaCreada.id;
+
+          // Actualizar la asignatura con su UID en Firebase
+          await this.updateAsignatura(asignatura);
+
+          // Eliminar la asignatura del almacenamiento local después de la sincronización
+          const updatedAsignaturasOffline = asignaturasOffline.filter((a: Asignatura) => a.uid !== asignatura.uid);
+          await this.localStorageSvc.set('asignaturasOffline', updatedAsignaturasOffline);
+        } catch (error) {
+          console.error('Error al sincronizar asignatura offline:', error);
+        }
+      }
+    }
+  }
 
 
 
 
-
-
+  async syncOfflineSecciones() {
+    const seccionesOffline = await this.localStorageSvc.get('seccionesOffline') || [];
+  
+    if (seccionesOffline.length === 0) {
+      console.log('No hay secciones para sincronizar.');
+      return;
+    }
+  
+    // Sincroniza cada sección offline con Firebase
+    for (const seccion of seccionesOffline) {
+      try {
+        // Primero intentamos crear la sección en Firebase
+        const docRef = await this.createSeccion(seccion);
+        seccion.uid = docRef.id;  // Asignamos el UID generado por Firebase
+  
+        // Luego actualizamos la sección con el UID
+        await this.updateSeccion(seccion);
+        console.log('Sección sincronizada:', seccion);
+      } catch (error) {
+        console.error('Error al sincronizar la sección:', error);
+      }
+    }
+  
+    // Elimina las secciones sincronizadas si lo deseas
+    await this.localStorageSvc.set('seccionesOffline', []); // Limpia las secciones offline una vez sincronizadas
+    console.log('Secciones offline sincronizadas correctamente.');
+  }
 
 
 

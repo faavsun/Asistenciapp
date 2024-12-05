@@ -4,6 +4,7 @@ import { FirebaseService } from 'src/app/services/firebase.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils.service';
 import { Asignatura } from 'src/app/models/asignatura.model'; // Modelo Asignatura
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 @Component({
   selector: 'app-crear-asignatura',
@@ -14,11 +15,12 @@ export class CrearAsignaturaPage implements OnInit {
 
   form = new FormGroup({
     nombre: new FormControl('', [Validators.required]),
-    maxEstudiantes: new FormControl('', [Validators.required, Validators.min(1)])
+    maxEstudiantes: new FormControl('', [Validators.required, Validators.min(1)]),
   });
 
   firebaseSvc = inject(FirebaseService);
   utilsSvc = inject(UtilsService);
+  localStorageSvc = inject(LocalStorageService);
 
   constructor(private menuCtrl: MenuController) { }
 
@@ -44,7 +46,7 @@ export class CrearAsignaturaPage implements OnInit {
           duration: 2000,
           color: 'danger',
           position: 'middle',
-          icon: 'alert-circle-outline'
+          icon: 'alert-circle-outline',
         });
         loading.dismiss();
         return;
@@ -52,58 +54,74 @@ export class CrearAsignaturaPage implements OnInit {
 
       // Obtener el objeto del usuario desde localStorage
       const userData = localStorage.getItem('user');
-
-      // Asegurarse de que existe y extraer el UID
       let uidProfesor = '';
+
       if (userData) {
         const user = JSON.parse(userData); // Convierte el string JSON en un objeto
         uidProfesor = user.uid; // Obtiene el UID del profesor
       }
 
-
       // Crear el objeto de asignatura sin el UID
       const asignatura: Asignatura = {
         uid_profesor: uidProfesor,  // El UID del profesor desde localStorage
         nombre: asignaturaData.nombre,
-        maxEstudiantes: maxEstudiantes // Valor numérico para maxEstudiantes
+        maxEstudiantes: maxEstudiantes, // Valor numérico para maxEstudiantes
+        uid: Date.now().toString(), // Aquí asignamos un UID temporal basado en el timestamp
       };
 
-      try {
-        // Llamar al servicio para crear la asignatura en Firebase
-        const asignaturaCreada = await this.firebaseSvc.createAsignatura(asignatura);
+      // Verificar la conexión a Internet
+      const isOnline = await this.utilsSvc.checkInternetConnection();
 
-        // Obtener el UID del documento recién creado y agregarlo al objeto
-        asignatura.uid = asignaturaCreada.id; // 'id' es el UID del documento de Firestore
+      if (isOnline) {
+        try {
+          // Llamar al servicio para crear la asignatura en Firebase
+          const asignaturaCreada = await this.firebaseSvc.createAsignatura(asignatura);
 
-        // Actualizar la asignatura con el UID
-        await this.firebaseSvc.updateAsignatura(asignatura);
+          // Obtener el UID del documento recién creado y agregarlo al objeto
+          asignatura.uid = asignaturaCreada.id;
 
-        // Restablecer el formulario
-        this.form.reset();
+          // Actualizar la asignatura con el UID real
+          await this.firebaseSvc.updateAsignatura(asignatura);
 
-        // Mostrar mensaje de éxito
+          // Mostrar mensaje de éxito
+          this.utilsSvc.presentToast({
+            message: 'Asignatura creada con éxito',
+            duration: 2000,
+            color: 'success',
+            position: 'middle',
+            icon: 'checkmark-circle-outline',
+          });
+
+          // Redirigir a otra página
+          this.utilsSvc.routerLink('/main-profesor/home-profesor');
+        } catch (error) {
+          console.log(error);
+          this.utilsSvc.presentToast({
+            message: 'Error al crear la asignatura',
+            duration: 2000,
+            color: 'danger',
+            position: 'middle',
+            icon: 'alert-circle-outline',
+          });
+        }
+      } else {
+        // Si no hay conexión, guardar la asignatura localmente con el UID temporal
+        let asignaturasOffline = (await this.localStorageSvc.get('asignaturasOffline')) || [];
+        asignaturasOffline.push(asignatura);
+
+        // Guardamos las asignaturas offline en localStorage
+        await this.localStorageSvc.set('asignaturasOffline', asignaturasOffline);
+
         this.utilsSvc.presentToast({
-          message: 'Asignatura creada con éxito',
+          message: 'Asignatura guardada localmente, se sincronizará cuando haya conexión',
           duration: 2000,
-          color: 'success',
+          color: 'warning',
           position: 'middle',
-          icon: 'checkmark-circle-outline'
+          icon: 'cloud-offline-outline',
         });
-
-        // Redirigir a otra página (por ejemplo, listado de asignaturas)
-        this.utilsSvc.routerLink('/main-profesor/home-profesor');
-      } catch (error) {
-        console.log(error);
-        this.utilsSvc.presentToast({
-          message: 'Error al crear la asignatura',
-          duration: 2000,
-          color: 'danger',
-          position: 'middle',
-          icon: 'alert-circle-outline'
-        });
-      } finally {
-        loading.dismiss();
       }
+
+      loading.dismiss();
     }
   }
 }

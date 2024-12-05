@@ -5,6 +5,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils.service';
 import { Seccion } from 'src/app/models/seccion.model'; // Modelo Sección
 import { Asignatura } from 'src/app/models/asignatura.model'; // Modelo Asignatura
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 @Component({
   selector: 'app-crear-seccion',
@@ -23,6 +24,7 @@ export class CrearSeccionPage implements OnInit {
 
   firebaseSvc = inject(FirebaseService);
   utilsSvc = inject(UtilsService);
+  localStorageSvc = inject(LocalStorageService);
 
   // Lista de asignaturas para el campo select
   asignaturas: Asignatura[] = [];
@@ -53,11 +55,24 @@ export class CrearSeccionPage implements OnInit {
   async loadAsignaturas() {
     const loading = await this.utilsSvc.loading();
     await loading.present();
-
-    const profesorUid = this.profesorUid; // Se obtiene desde localStorage o la variable de componente
-    this.firebaseSvc.getAsignaturasPorProfesor(profesorUid).then(asignaturas => {
-      this.asignaturas = asignaturas;
-    }).catch(error => {
+  
+    try {
+      const isOnline = await this.utilsSvc.checkInternetConnection();
+  
+      if (isOnline) {
+        // Si hay conexión, cargamos las asignaturas desde Firebase
+        const profesorUid = this.profesorUid;
+        const asignaturasOnline = await this.firebaseSvc.getAsignaturasPorProfesor(profesorUid);
+        // Guardamos las asignaturas online en el localStorage bajo la clave "asignaturasOnline"
+        this.asignaturas = asignaturasOnline;
+      } else {
+        // Si no hay conexión, cargamos las asignaturas desde el localStorage (online + offline)
+        const asignaturasOnline = await this.localStorageSvc.get('asignaturasProfesor') || [];  // Las que ya están guardadas online en localStorage
+        //const asignaturasOffline = await this.localStorageSvc.get('asignaturasOffline') || []; // Las asignaturas offline
+        //this.asignaturas = [...asignaturasOnline, ...asignaturasOffline];  // Combinamos ambas listas
+        this.asignaturas = asignaturasOnline;
+      }
+    } catch (error) {
       console.log('Error al cargar las asignaturas:', error);
       this.utilsSvc.presentToast({
         message: 'No se pudo cargar las asignaturas',
@@ -66,9 +81,9 @@ export class CrearSeccionPage implements OnInit {
         position: 'middle',
         icon: 'alert-circle-outline'
       });
-    }).finally(() => {
+    } finally {
       loading.dismiss();
-    });
+    }
   }
 
   // Función para manejar el envío del formulario
@@ -76,44 +91,48 @@ export class CrearSeccionPage implements OnInit {
     if (this.form.valid) {
       const loading = await this.utilsSvc.loading();
       await loading.present();
-
-      // Obtener los valores del formulario
-      const seccionData = this.form.value; // { nombre, asignatura, aula, profesor }
-
-      // Crear el objeto de sección sin el UID (porque Firebase generará el UID automáticamente)
+  
+      const seccionData = this.form.value;
       const seccion: Seccion = {
         nombre: seccionData.nombre,
-        asignatura: seccionData.asignatura, // Asignatura seleccionada
+        asignatura: seccionData.asignatura,
         aula: seccionData.aula,
-        profesor: seccionData.profesor, // Aquí se usa el valor de profesor desde el formulario
+        profesor: seccionData.profesor,
       };
-
+  
       try {
-        // Llamar al servicio para crear la sección en Firebase
-        const docRef = await this.firebaseSvc.createSeccion(seccion);
-
-        seccion.uid = docRef.id;
-
-        await this.firebaseSvc.updateSeccion(seccion);
-
-        // Restablecer el formulario
+        const isOnline = await this.utilsSvc.checkInternetConnection();
+  
+        if (isOnline) {
+          // Si hay conexión, guardamos la sección en Firebase
+          const docRef = await this.firebaseSvc.createSeccion(seccion);
+          seccion.uid = docRef.id;
+          await this.firebaseSvc.updateSeccion(seccion);
+  
+          this.utilsSvc.presentToast({
+            message: 'Sección creada con éxito',
+            duration: 2000,
+            color: 'success',
+            position: 'middle',
+            icon: 'checkmark-circle-outline'
+          });
+        } else {
+          // Si no hay conexión, guardamos la sección en localStorage
+          let seccionesOffline = await this.localStorageSvc.get('seccionesOffline') || [];
+          seccionesOffline.push(seccion); // Guardamos la sección offline
+          await this.localStorageSvc.set('seccionesOffline', seccionesOffline); // Guardamos en localStorage
+  
+          this.utilsSvc.presentToast({
+            message: 'Sección guardada offline. Se sincronizará cuando tengas conexión.',
+            duration: 2000,
+            color: 'warning',
+            position: 'middle',
+            icon: 'cloud-offline-outline'
+          });
+        }
+  
         this.form.reset();
-        // Aquí puedes usar el objeto seccionConUid que ya tiene el UID generado
-        // Redirigir o hacer alguna otra acción si es necesario
-
-        this.utilsSvc.presentToast({
-          message: 'Sección creada con éxito',
-          duration: 2000,
-          color: 'success',
-          position: 'middle',
-          icon: 'checkmark-circle-outline'
-        });
-
-        // Redirigir a otra página (por ejemplo, listado de secciones)
         this.utilsSvc.routerLink('/main-profesor/home-profesor');
-
-        // Limpiar el formulario después de crear la sección
-        this.form.reset();
       } catch (error) {
         console.error('Error al crear la sección:', error);
         this.utilsSvc.presentToast({
