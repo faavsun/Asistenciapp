@@ -116,29 +116,32 @@ export class RegistroPage implements OnInit {
     if (this.form.valid) {
       const loading = await this.utilsSvc.loading();
       await loading.present();
-
+  
       let path = `users/${uid}`;
-      delete this.form.value.password;  // No guardamos la contraseña en la base de datos
-
-      // Incluir el tipo de usuario en el objeto que se guarda en Firebase
-      this.firebaseSvc.setDocument(path, { ...this.form.value, tipo: tipoUsuario }).then(async res => {
-        this.utilsSvc.saveInLocalStorage('user', this.form.value);
-        this.utilsSvc.routerLink('/login');  // Navegamos a la pantalla de login
-
-      }).catch(error => {
-        console.log(error);
-
-        this.utilsSvc.presentToast({
-          message: error.message,
-          duration: 2000,
-          color: 'primary',
-          position: 'middle',
-          icon: 'alert-circle-outline'
+      delete this.form.value.password; // No guardamos la contraseña en la base de datos
+  
+      // Guardar los datos en Firebase
+      this.firebaseSvc.setDocument(path, { ...this.form.value, tipo: tipoUsuario })
+        .then(async () => {
+          // Guardar la información del usuario en el almacenamiento local (opcional)
+          await this.utilsSvc.saveInLocalStorage('user', this.form.value);
+          
+          // Navegar al login
+          this.utilsSvc.routerLink('/login'); // Redirige al login
+        })
+        .catch(error => {
+          console.error(error);
+          this.utilsSvc.presentToast({
+            message: error.message,
+            duration: 2000,
+            color: 'primary',
+            position: 'middle',
+            icon: 'alert-circle-outline'
+          });
+        })
+        .finally(() => {
+          loading.dismiss();
         });
-
-      }).finally(() => {
-        loading.dismiss();
-      });
     }
   }
 

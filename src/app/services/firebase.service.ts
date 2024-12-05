@@ -246,35 +246,30 @@ async getAsignaturasPorProfesor(profesorUid: string): Promise<Asignatura[]> {
 
 
 // Método para obtener todos los documentos de la colección 'secciones'
-private seccionesCache: Seccion[] | null = null;
-
+// Método para obtener todos los documentos de la colección 'secciones'
 async getAllSecciones(): Promise<Seccion[]> {
-  if (this.seccionesCache) {
-    return this.seccionesCache; // Devuelve los datos en caché si ya fueron obtenidos
-  }
-
   try {
     const snapshot = await this.firestore.collection('seccion').get().toPromise();
     
+    // Verificar si los documentos están vacíos
     if (snapshot.empty) {
       console.log('No se encontraron secciones en Firestore.');
       return [];
     }
 
+    // Mapea los datos a la estructura de tipo 'Seccion'
     const secciones = snapshot.docs.map(doc => {
       const data = doc.data() as { nombre: string; asignatura: string; profesor: string; aula?: string; total_clases?: number };
       return {
-        uid: doc.id,
-        nombre: data.nombre || '',
-        asignatura: data.asignatura || '',
-        profesor: data.profesor || '',
-        aula: data.aula || '',
-        total_clases: data.total_clases || 0
+        uid: doc.id,               // El 'id' de Firestore se convierte en el 'uid' de la sección
+        nombre: data.nombre || '',  // Si no tiene nombre, asigna un string vacío
+        asignatura: data.asignatura || '',  // Si no tiene asignatura, asigna un string vacío
+        profesor: data.profesor || '',  // Si no tiene profesor, asigna un string vacío
+        aula: data.aula || '',  // Si no tiene aula, asigna un string vacío
+        total_clases: data.total_clases || 0  // Si no tiene total_clases, asigna 0
       };
     });
-    
-    this.seccionesCache = secciones; // Cachea los resultados para futuras llamadas
-    console.log("Secciones obtenidas de Firestore:", secciones);
+    console.log("Secciones obtenidas de Firestore:", secciones); // Verifica si se obtienen datos
     return secciones;
   } catch (error) {
     console.error('Error al obtener las secciones:', error);
