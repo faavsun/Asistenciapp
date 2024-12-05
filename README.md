@@ -2,6 +2,12 @@
 Es una aplicación móvil desarrollada para Duoc UC con el objetivo de optimizar y automatizar el proceso de registro de asistencia a clases. La aplicación permite que los estudiantes registren su asistencia escaneando un código QR generado por el docente, eliminando los errores comunes en el proceso manual y mejorando la eficiencia en la toma de asistencia.
 ## Imagenes
 
+![Imagen de WhatsApp 2024-12-05 a las 14 33 41_fd980295](https://github.com/user-attachments/assets/5a99f11d-aa08-46df-b79d-9912c8384a83)
+![Imagen de WhatsApp 2024-12-05 a las 14 33 41_526fb36c](https://github.com/user-attachments/assets/371c1ea1-cc2d-4d20-bf69-1f3ef3880c95)
+![Imagen de WhatsApp 2024-12-05 a las 14 33 41_23ba41e1](https://github.com/user-attachments/assets/2bd90277-3b5b-4fdd-a7c6-b12ebe1f38c5)
+![Imagen de WhatsApp 2024-11-05 a las 10 24 39_5a406aae](https://github.com/user-attachments/assets/b1fe9843-4ef8-4c1a-8bc0-532a79558e6c)
+
+
 ## Funcionalidades
 Registro de Asistencia Automatizado: Los estudiantes pueden registrar su asistencia escaneando un código QR proyectado por el docente en clase.
 Acceso con Credenciales: Los estudiantes ingresan a la aplicación usando sus credenciales de acceso institucional.
