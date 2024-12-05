@@ -13,35 +13,35 @@ export class AuthGuard implements CanActivate {
   utilsSvc = inject(UtilsService);
 
   canActivate(
-    route: ActivatedRouteSnapshot, 
+    route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
     return new Promise((resolve) => {
+      const sessionActive = localStorage.getItem('sessionActive');
       const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
 
-      // Si no hay usuario en localStorage, redirigir al login
-      if (!user) {
-        this.utilsSvc.routerLink('/login');
+      // Verificar si no hay sesión activa o no hay datos del usuario
+      if (sessionActive === 'false' || !user) {
+        this.utilsSvc.routerLink('/login'); // Redirige al login
         resolve(false);
         return;
       }
 
-      // Verificar el estado de autenticación en Firebase
-      if (navigator.onLine) {  // Si hay conexión a internet, comprobar en Firebase
+      // Verificar autenticación con Firebase en modo online
+      if (navigator.onLine) {
         this.firebaseSvc.getAuth().onAuthStateChanged((auth) => {
           if (!auth) {
-            // Si no está autenticado en Firebase, redirigir al login
-            this.utilsSvc.routerLink('/login');
+            this.utilsSvc.routerLink('/login'); // Si no está autenticado, redirige al login
             resolve(false);
             return;
           }
 
-          // Si está autenticado en Firebase, permitir el acceso según su tipo de usuario
+          // Si está autenticado en Firebase, validar las rutas
           this.checkRoutePermission(route, user, resolve);
         });
       } else {
-        // Si está offline, usar localStorage para validar el acceso
+        // En modo offline, validar solo con localStorage
         this.checkRoutePermission(route, user, resolve);
       }
     });
@@ -52,6 +52,7 @@ export class AuthGuard implements CanActivate {
     const userType = user.tipo;
 
     let isValidRoute = false;
+
     if (userType === 'estudiante') {
       const studentPages = [
         'main-estudiante',
@@ -76,10 +77,10 @@ export class AuthGuard implements CanActivate {
     }
 
     if (!isValidRoute) {
-      this.utilsSvc.routerLink('/login');
+      this.utilsSvc.routerLink('/login'); // Si la ruta no es válida, redirige al login
       resolve(false);
     } else {
-      resolve(true);
+      resolve(true); // Permite el acceso si la ruta es válida
     }
   }
 }

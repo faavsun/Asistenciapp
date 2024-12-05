@@ -19,7 +19,6 @@ export class HomePage implements OnInit {
   asignaturas: { asignatura: Asignatura; seccionId: string }[] = []; // Array modificado
   alumnoUid: string = ''; // Almacenaremos el UID del alumno aquí
 
-
   constructor(
     private router: Router,
     private appComponent: AppComponent,

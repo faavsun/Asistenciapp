@@ -39,7 +39,7 @@ export class MainEstudiantePage implements OnInit {
   async signOut() {
     const alert = await this.alertController.create({
       header: 'Cerrar sesión',
-      message: 'Al cerrar sesión, los datos locales se eliminarán y solo podrá acceder nuevamente con conexión a internet. ¿Desea continuar?',
+      message: '¿Esta seguro que desea cerrar la sesion?',
       backdropDismiss: false,
       buttons: [
         {

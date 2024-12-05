@@ -25,7 +25,6 @@ export class LoginPage implements OnInit {
   constructor(private menuCtrl: MenuController) {}
 
   ngOnInit() {
-
     // Verificar si el usuario ya está autenticado mediante localStorage
     const isLoggedIn = this.localStorageSvc.get('isLoggedIn');
     const user = this.localStorageSvc.get('user');
@@ -36,6 +35,7 @@ export class LoginPage implements OnInit {
     }
   }
 
+  
   // Método de inicio de sesión
   async submit() {
     if (this.form.valid) {
@@ -57,14 +57,14 @@ export class LoginPage implements OnInit {
 
           await this.getUserInfo(res.user.uid, passwordHash);
         } else {
-          const user = this.localStorageSvc.get('user');
+          const storedUser = this.localStorageSvc.get('user');
           const storedHash = this.localStorageSvc.get('passwordHash');
           const inputPasswordHash = SHA256(this.form.value.password).toString();
 
-          if (user && storedHash && user.email === this.form.value.email) {
+          if (storedUser && storedHash && storedUser.email === this.form.value.email) {
             if (storedHash === inputPasswordHash) {
               console.log('Usuario autenticado en modo offline.');
-              this.getUserInfoOffline(user);
+              this.getUserInfoOffline(storedUser);
             } else {
               console.warn('Contraseña incorrecta en modo offline.');
               this.utilsSvc.presentToast({
@@ -113,8 +113,9 @@ export class LoginPage implements OnInit {
 
           // Almacenar datos y hash de la contraseña
           this.localStorageSvc.set('user', user);
-          this.localStorageSvc.set('passwordHash', passwordHash);
+          this.localStorageSvc.set('passwordHash', passwordHash); // Almacenar el hash de la contraseña
           this.localStorageSvc.set('isLoggedIn', 'true');
+          this.localStorageSvc.set('sessionActive', 'true'); // Asegurar que sessionActive sea true
 
           this.redirectUser(user);
         } else {
@@ -133,6 +134,7 @@ export class LoginPage implements OnInit {
   getUserInfoOffline(user: User) {
     console.log('Usando datos locales para redirigir:', user);
     this.localStorageSvc.set('isLoggedIn', 'true');
+    this.localStorageSvc.set('sessionActive', 'true'); // Asegurar que sessionActive sea true
     this.redirectUser(user);
   }
 
