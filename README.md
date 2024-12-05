@@ -1,5 +1,5 @@
 # Asistenciapp
-Es una aplicación móvil desarrollada para Duoc UC con el objetivo de optimizar y automatizar el proceso de registro de asistencia a clases. La aplicación permite que los estudiantes registren su asistencia escaneando un código QR generado por el docente, eliminando los errores comunes en el proceso manual y mejorando la eficiencia en la toma de asistencia.
+Se trata de una aplicación móvil desarrollada para Duoc UC con el propósito de optimizar y automatizar el proceso de registro de asistencia a clases. La aplicación permite a los estudiantes registrar su presencia mediante el escaneo de un código QR generado por el docente, lo que contribuye a eliminar los errores comunes en el proceso manual y a mejorar la eficiencia en la gestión de la asistencia.
 ## Imagenes
 
 ![Imagen de WhatsApp 2024-12-05 a las 14 33 41_fd980295](https://github.com/user-attachments/assets/5a99f11d-aa08-46df-b79d-9912c8384a83)
@@ -9,15 +9,15 @@ Es una aplicación móvil desarrollada para Duoc UC con el objetivo de optimizar
 
 
 ## Funcionalidades
-Registro de Asistencia Automatizado: Los estudiantes pueden registrar su asistencia escaneando un código QR proyectado por el docente en clase.
-Acceso con Credenciales: Los estudiantes ingresan a la aplicación usando sus credenciales de acceso institucional.
-Desarrollo Adaptable a Diferentes Dispositivos: La aplicación está optimizada para funcionar en dispositivos con Android e iOS.
-Interfaz Adaptativa: Se adapta a distintos tamaños de pantalla, ofreciendo una experiencia de usuario óptima tanto en teléfonos como en tabletas.
-Reporte de Asistencia: Los docentes pueden visualizar los reportes de asistencia con detalles sobre los alumnos presentes.
+Registro de Asistencia Automatizado: Los estudiantes pueden registrar su asistencia mediante el escaneo de un código QR proyectado por el docente durante la clase.
+Acceso con Credenciales: Los estudiantes acceden a la aplicación utilizando sus credenciales institucionales.
+Desarrollo Adaptable a Diferentes Dispositivos: La aplicación está optimizada para su funcionamiento en dispositivos con sistemas operativos Android e iOS.
+Interfaz Adaptativa: La interfaz se ajusta a distintos tamaños de pantalla, proporcionando una experiencia de usuario adecuada tanto en teléfonos móviles como en tabletas.
+Reporte de Asistencia: Los docentes pueden acceder a los reportes de asistencia, los cuales incluyen detalles sobre los estudiantes presentes en cada clase.
 ## Requisitos
 Sistema operativo: Android 5.0 o superior, iOS 11 o superior.
-Conexión a internet: Se necesita para la sincronización de los datos de asistencia con el sistema central.
-Dispositivos compatibles: Teléfonos y tabletas Android e iOS.
+Conexión a Internet: Requerida para la sincronización de los datos de asistencia con el sistema central.
+Dispositivos compatibles: Teléfonos y tabletas con sistemas operativos Android e iOS.
 ## Instalación
 Para Android:
 Descarga el archivo APK desde el siguiente enlace: (https://github.com/faavsun/Asistenciapp/releases/tag/APK)
