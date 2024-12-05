@@ -19,10 +19,17 @@ export class AppComponent {
   }
 
 
+
+
+
+
+
+
+  
   monitorConnection() {
     Network.addListener('networkStatusChange', async status => {
       if (status.connected) {
-        console.log('Conexión restaurada. Sincronizando offline...');
+        console.log('Conexión restaurada. Sincronizando asistencias offline...');
         await this.firebaseSvc.syncOfflineAttendance();
         await this.firebaseSvc.syncOfflineAsignaturas();
         await this.firebaseSvc.syncOfflineSecciones();
@@ -30,6 +37,14 @@ export class AppComponent {
       }
     });
   }
+
+
+
+
+
+
+
+
 
 
   CloseMenu() {

@@ -2,3 +2,7 @@
     max-height: 800px; /* Ajusta esta altura según tus necesidades */
     overflow-y: auto;  /* Habilita el scroll vertical */
 }
+
+html, body {
+    touch-action: none; /* Desactiva los gestos táctiles */
+  }
