@@ -71,26 +71,21 @@ export class HomeProfesorPage implements OnInit {
   async cargarDatosDesdeFirebase(profesorUid: string) {
     const loading = await this.utilsSvc.loading();
     await loading.present();
-  
+
     try {
-      // Verificar si los datos ya están en localStorage
-      const cachedAsignaturas = await this.localStorageSvc.get('asignaturasProfesor');
-      if (cachedAsignaturas && cachedAsignaturas.length > 0) {
-        this.asignaturas = cachedAsignaturas;
-      } else {
-        // Obtener datos del profesor
-        const userData = await this.firebaseSvc.getProfesorNombre(profesorUid);
-        this.nombreprofe = userData.name + ' ' + userData.lastname;
-  
-        // Obtener asignaturas del profesor
-        this.asignaturas = await this.firebaseSvc.getAsignaturasPorProfesor(profesorUid);
-      }
-  
+      // Obtener datos del profesor
+      const userData = await this.firebaseSvc.getProfesorNombre(profesorUid);
+      this.nombreprofe = userData.name + ' ' + userData.lastname;
+
+      // Obtener asignaturas del profesor
+      const asignaturas = await this.firebaseSvc.getAsignaturasPorProfesor(profesorUid);
+      this.asignaturas = asignaturas;
+
       // Obtener secciones para cada asignatura
       for (const asignatura of this.asignaturas) {
         await this.cargarSecciones(asignatura.uid);
       }
-  
+
       // Guardar los datos en localStorage
       this.localStorageSvc.set('asignaturasProfesor', this.asignaturas);
       this.localStorageSvc.set('seccionesPorAsignatura', this.seccionesPorAsignatura);
@@ -102,41 +97,20 @@ export class HomeProfesorPage implements OnInit {
     }
   }
 
-  async cargarDatosDesdeLocalStorage() {
-    const cachedAsignaturas = await this.localStorageSvc.get('asignaturasProfesor');
-    if (cachedAsignaturas) {
-      this.asignaturas = cachedAsignaturas;
-    } else {
-      this.asignaturas = [];
-    }
-  
-    const cachedSecciones = await this.localStorageSvc.get('seccionesPorAsignatura');
-    if (cachedSecciones) {
-      this.seccionesPorAsignatura = cachedSecciones;
-    } else {
-      this.seccionesPorAsignatura = {};
-    }
-  
-    this.nombreprofe = await this.localStorageSvc.get('nombreProfesor') || '';
+  cargarDatosDesdeLocalStorage() {
+    this.asignaturas = this.localStorageSvc.get('asignaturasProfesor') || [];
+    this.seccionesPorAsignatura = this.localStorageSvc.get('seccionesPorAsignatura') || {};
+    this.nombreprofe = this.localStorageSvc.get('nombreProfesor') || '';
   }
 
   async cargarSecciones(asignaturaId: string) {
     if (!this.seccionesPorAsignatura[asignaturaId]) {
-      // Si no tenemos secciones para esta asignatura, las cargamos
       const secciones = await this.firebaseSvc.getAllSecciones();
-      // Filtramos las secciones correspondientes a la asignatura y profesor
-      const seccionesFiltradas = secciones.filter(
+      this.seccionesPorAsignatura[asignaturaId] = secciones.filter(
         (seccion) => seccion.asignatura === asignaturaId && seccion.profesor === this.user().uid
       );
-      
-      // Guardamos las secciones en el objeto seccionesPorAsignatura
-      this.seccionesPorAsignatura[asignaturaId] = seccionesFiltradas;
-  
-      // Guardar en localStorage para evitar consultas futuras
-      this.localStorageSvc.set('seccionesPorAsignatura', this.seccionesPorAsignatura);
     }
   }
-  
 
   user(): User {
     return this.utilsSvc.getFromLocalStorage('user');

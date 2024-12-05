@@ -243,19 +243,10 @@ async getAsignaturasPorProfesor(profesorUid: string): Promise<Asignatura[]> {
 
 
 // Método para obtener todos los documentos de la colección 'secciones'
-// Método para obtener todos los documentos de la colección 'secciones' con cache
 async getAllSecciones(): Promise<Seccion[]> {
   try {
-    // Intentar obtener las secciones desde el almacenamiento local primero
-    const cachedSecciones = await this.localStorageSvc.get('secciones');
-    if (cachedSecciones) {
-      console.log('Secciones obtenidas desde localStorage');
-      return cachedSecciones; // Devuelve las secciones desde el cache
-    }
-
-    // Si no están en localStorage, obtenerlas de Firestore
     const snapshot = await this.firestore.collection('seccion').get().toPromise();
-
+    
     // Verificar si los documentos están vacíos
     if (snapshot.empty) {
       console.log('No se encontraron secciones en Firestore.');
@@ -274,10 +265,6 @@ async getAllSecciones(): Promise<Seccion[]> {
         total_clases: data.total_clases || 0  // Si no tiene total_clases, asigna 0
       };
     });
-
-    // Guardar las secciones en localStorage para evitar futuras consultas
-    await this.localStorageSvc.set('secciones', secciones);
-
     console.log("Secciones obtenidas de Firestore:", secciones); // Verifica si se obtienen datos
     return secciones;
   } catch (error) {
@@ -754,6 +741,21 @@ getAsignaturas(): Observable<Asignatura[]> {
   return this.firestore.collection<Asignatura>('asignatura').valueChanges();
 }
 
+getTodasLasSecciones(): Observable<Seccion[]> {
+  return this.firestore.collection('seccion').valueChanges({ idField: 'uid' }).pipe(
+    map((data: any[]) => 
+      data.map(item => ({
+        uid: item.uid,
+        nombre: item.nombre || '',
+        asignatura: item.asignatura || '',
+        aula: item.aula || '',
+        profesor: item.profesor || ''
+      }))
+    )
+  );
+}
+
+
 // Método para obtener las secciones por asignatura
 getSeccionesPorAsignatura(asignaturaUid: string) {
   return this.firestore.collection('seccion', ref => ref.where('asignatura', '==', asignaturaUid))
@@ -891,7 +893,38 @@ async syncOfflineAttendance() {
   }
 
 
-
+  async sincronizarInscripciones() {
+    const inscripcionesOffline = this.localStorageSvc.get('inscripcionesOffline') || [];
+    
+    for (const inscripcion of inscripcionesOffline) {
+      // Verificar si el alumno ya está inscrito en otra sección de la misma asignatura
+      const yaInscripto = await this.verificarInscripcionExistente(
+        inscripcion.alumno,
+        inscripcion.asignatura
+      );
+  
+      if (!yaInscripto) {
+        this.utilsSvc.presentToast({
+          message: `El estudiante ya está inscrito en otra sección de la asignatura`,
+          duration: 2000,
+          color: 'danger',
+          position: 'middle',
+          icon: 'alert-circle-outline'
+        });
+        continue; // Pasar a la siguiente inscripción si ya está inscrito
+      }
+  
+      // Inscribir al estudiante si la validación pasa
+      await this.inscribirEstudiante(
+        inscripcion.alumno,
+        inscripcion.seccion,
+        inscripcion.asignatura
+      );
+    }
+  
+    // Limpiar inscripciones locales tras sincronización
+    this.localStorageSvc.set('inscripcionesOffline', []);
+  }
 
 
 }

@@ -12,6 +12,15 @@ export class LocalStorageService {
     localStorage.setItem(key, JSON.stringify(value));
   }
 
+
+  setIfNotExists(key: string, value: any) {
+    const existingData = localStorage.getItem(key);
+    if (!existingData) {
+      console.log(`Guardando en localStorage porque no existe la clave: ${key}`);
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+  }
+
   // Método para obtener datos de localStorage
   get(key: string): any {
     const value = localStorage.getItem(key);

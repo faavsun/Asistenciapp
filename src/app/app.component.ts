@@ -26,6 +26,7 @@ export class AppComponent {
         await this.firebaseSvc.syncOfflineAttendance();
         await this.firebaseSvc.syncOfflineAsignaturas();
         await this.firebaseSvc.syncOfflineSecciones();
+        await this.firebaseSvc.sincronizarInscripciones();
       }
     });
   }
