@@ -80,10 +80,12 @@ export class HomeProfesorPage implements OnInit {
       // Obtener asignaturas del profesor
       const asignaturas = await this.firebaseSvc.getAsignaturasPorProfesor(profesorUid);
       this.asignaturas = asignaturas;
-
+      const secciones = await this.firebaseSvc.getAllSecciones();
       // Obtener secciones para cada asignatura
       for (const asignatura of this.asignaturas) {
-        await this.cargarSecciones(asignatura.uid);
+        this.seccionesPorAsignatura[asignatura.uid] = secciones.filter(
+          (seccion) => seccion.asignatura === asignatura.uid && seccion.profesor === this.user().uid
+        );
       }
 
       // Guardar los datos en localStorage
@@ -103,14 +105,7 @@ export class HomeProfesorPage implements OnInit {
     this.nombreprofe = this.localStorageSvc.get('nombreProfesor') || '';
   }
 
-  async cargarSecciones(asignaturaId: string) {
-    if (!this.seccionesPorAsignatura[asignaturaId]) {
-      const secciones = await this.firebaseSvc.getAllSecciones();
-      this.seccionesPorAsignatura[asignaturaId] = secciones.filter(
-        (seccion) => seccion.asignatura === asignaturaId && seccion.profesor === this.user().uid
-      );
-    }
-  }
+
 
   user(): User {
     return this.utilsSvc.getFromLocalStorage('user');

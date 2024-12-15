@@ -13,5 +13,21 @@
       <ion-label>{{ asignaturaItem.asignatura.nombre }}</ion-label> <!-- Mostrar el nombre de la asignatura -->
     </ion-item>
   </ion-list>
-
+  <!-- Lista de Asignaturas Pendientes -->
+  <ion-card *ngIf="asignaturasPendientes.length > 0">
+    <ion-list [inset]="true" lines="inset" mode="ios" class="scrollable-list">
+      <ion-list-header mode="ios" color="danger" class="ion-text-center">
+        <ion-label>Lista de Asignaturas Pendientes</ion-label>
+      </ion-list-header>
+      
+      <ion-item 
+        (click)="abrirDetalleSeccion(asignaturaItem.seccionuid)" 
+        detail="true" 
+        *ngFor="let asignaturaItem of asignaturasPendientes">
+        <ion-icon name="reader-outline" slot="start"></ion-icon>
+        <ion-label>{{ asignaturaItem.nombre }}</ion-label> <!-- Mostrar el nombre de la asignatura -->
+      </ion-item>
+    </ion-list>
+  </ion-card>
 </ion-content>
+
