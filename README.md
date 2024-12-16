@@ -20,7 +20,7 @@ Conexión a Internet: Requerida para la sincronización de los datos de asistenc
 Dispositivos compatibles: Teléfonos y tabletas con sistemas operativos Android e iOS.
 ## Instalación
 Para Android:
-Descarga el archivo APK desde el siguiente enlace: (https://github.com/faavsun/Asistenciapp/releases/tag/APK)
+Descarga el archivo APK desde el siguiente enlace: (https://github.com/faavsun/Asistenciapp/releases/tag/APK1.1)
 Habilita la instalación de aplicaciones de orígenes desconocidos en la configuración de tu dispositivo.
 Instala el archivo APK.
 ### Cómo Usar la Aplicación
